@@ -1,3 +1,15 @@
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,12 +53,28 @@
             position: relative;
             border-bottom: 2px solid #F59331;
         }
+        .chatbot-header .logo-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            border: 2px solid #F59331;
+            background: linear-gradient(135deg, #F59331, #e8841f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
         .chatbot-header img {
             width: 40px;
-            height: auto;
+            height: 40px;
             border-radius: 50%;
-            margin-bottom: 5px;
+            margin: 0 auto 5px;
             border: 2px solid #F59331;
+            display: block;
         }
         .chatbot-header .close-btn {
             position: absolute;
@@ -89,18 +117,49 @@
         .chatbot-messages {
             height: 320px;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 15px;
             background: linear-gradient(to bottom, #f8f9fa, #ffffff);
             position: relative;
+            scroll-behavior: smooth;
         }
+        
+        /* Amélioration du scrolling vertical */
+        .chatbot-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+            margin: 4px;
+        }
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0080A2, #006b8a);
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        .chatbot-messages::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #006b8a, #004d5c);
+        }
+        
+        /* Scrollbar pour Firefox */
+        .chatbot-messages {
+            scrollbar-width: thin;
+            scrollbar-color: #0080A2 #f1f1f1;
+        }
+        
         .message {
             margin: 12px 0;
-            padding: 10px 15px;
+            padding: 12px 16px;
             border-radius: 18px;
             max-width: 85%;
             position: relative;
             word-wrap: break-word;
+            word-break: break-word;
             animation: messageSlide 0.3s ease-out;
+            clear: both;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
         @keyframes messageSlide {
             from { transform: translateY(10px); opacity: 0; }
@@ -112,6 +171,7 @@
             margin-left: auto;
             border-bottom-right-radius: 5px;
             box-shadow: 0 2px 8px rgba(245, 147, 49, 0.3);
+            float: right;
         }
         .bot-message {
             background: linear-gradient(135deg, #0080A2, #006b8a);
@@ -119,6 +179,9 @@
             margin-right: auto;
             border-bottom-left-radius: 5px;
             box-shadow: 0 2px 8px rgba(0, 128, 162, 0.3);
+            float: left;
+            padding-left: 25px;
+            position: relative;
         }
         .bot-message::before {
             content: '🤖';
@@ -129,8 +192,13 @@
             font-size: 1.2em;
             background: white;
             border-radius: 50%;
-            padding: 2px;
+            padding: 4px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .message-image {
             max-width: 200px;
@@ -140,19 +208,41 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.2s;
+            display: block;
         }
         .message-image:hover {
             transform: scale(1.05);
         }
         .typing-indicator {
             display: none;
-            padding: 10px 15px;
+            padding: 12px 16px;
             background: linear-gradient(135deg, #0080A2, #006b8a);
             border-radius: 18px;
             max-width: 80px;
             margin: 12px 0;
             color: white;
             border-bottom-left-radius: 5px;
+            float: left;
+            clear: both;
+            position: relative;
+            padding-left: 25px;
+        }
+        .typing-indicator::before {
+            content: '🤖';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            background: white;
+            border-radius: 50%;
+            padding: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .typing-dots {
             display: flex;
@@ -192,9 +282,11 @@
             outline: none;
             font-size: 14px;
             transition: border-color 0.3s;
+            min-width: 0;
         }
         .chatbot-input input[type="text"]:focus {
             border-color: #F59331;
+            box-shadow: 0 0 0 2px rgba(245, 147, 49, 0.2);
         }
         .chatbot-input button {
             padding: 12px 16px;
@@ -205,26 +297,34 @@
             cursor: pointer;
             font-weight: bold;
             transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
         }
         .chatbot-input button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(245, 147, 49, 0.4);
         }
 
-        .image-upload-btn, .voice-btn, .emoji-btn {
-            background: none;
-            border: 2px solid #0080A2;
+        .image-upload-btn, .voice-btn{
+            background: none !important;
+            border: 2px solid #0080A2 !important;
             font-size: 16px;
             cursor: pointer;
             color: #0080A2;
-            padding: 10px;
-            border-radius: 50%;
+            padding: 10px !important;
+            border-radius: 50% !important;
             transition: all 0.3s;
+            min-width: 42px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .image-upload-btn:hover, .voice-btn:hover, .emoji-btn:hover {
-            background: #0080A2;
+        .image-upload-btn:hover, .voice-btn:hover{
+            background: #0080A2 !important;
             color: white;
             transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 128, 162, 0.3) !important;
         }
         .image-preview {
             display: none;
@@ -294,55 +394,56 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-        .emoji-picker {
-            display: none;
-            position: absolute;
-            bottom: 70px;
-            right: 80px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-width: 200px;
-        }
-        .emoji-picker span {
-            cursor: pointer;
-            font-size: 20px;
-            margin: 5px;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background 0.2s;
-        }
-        .emoji-picker span:hover {
-            background: #f0f0f0;
-        }
+
         .quick-replies {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             margin: 10px 0;
+            clear: both;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #0080A2 transparent;
         }
+        
+        /* Scrollbar horizontal pour les quick-replies */
+        .quick-replies::-webkit-scrollbar {
+            height: 4px;
+        }
+        .quick-replies::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .quick-replies::-webkit-scrollbar-thumb {
+            background: #0080A2;
+            border-radius: 2px;
+        }
+        
         .quick-reply {
             background: transparent;
             border: 1px solid #0080A2;
             color: #0080A2;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 15px;
             cursor: pointer;
             font-size: 12px;
             transition: all 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .quick-reply:hover {
             background: #0080A2;
             color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 128, 162, 0.3);
         }
         .voice-recording {
             display: none;
             align-items: center;
             gap: 10px;
-            padding: 10px;
-            background: #ffe6e6;
+            padding: 12px;
+            background: linear-gradient(135deg, #ffe6e6, #fff0f0);
+            border: 1px solid #ffcccc;
             border-radius: 10px;
             margin-bottom: 10px;
         }
@@ -358,6 +459,15 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Clear fix pour les floats */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        
+        /* Amélioration responsive */
         @media (max-width: 480px) {
             .chatbot-container {
                 width: 95%;
@@ -370,6 +480,30 @@
                 bottom: 15px;
                 right: 15px;
             }
+            .message {
+                max-width: 90%;
+                font-size: 14px;
+            }
+            .input-group {
+                gap: 6px;
+            }
+            .image-upload-btn, .voice-btn {
+                min-width: 38px;
+                width: 38px;
+                height: 38px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .quick-replies {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .quick-reply {
+                align-self: stretch;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -381,7 +515,10 @@
     
     <div class="chatbot-container" id="chatbotContainer">
         <div class="chatbot-header">
-            <img src="zlij.jpg">
+            <div class="logo-placeholder" id="logoPlaceholder">UMI</div>
+            <img src="Logo-umi.png" alt="UMI Logo" id="umiLogo" style="display: none;" 
+                 onload="this.style.display='block'; document.getElementById('logoPlaceholder').style.display='none';" 
+                 onerror="this.style.display='none'; document.getElementById('logoPlaceholder').style.display='flex';">
             <button class="minimize-btn" onclick="minimizeChat()">−</button>
             <button class="close-btn" onclick="closeChat()">×</button>
             <div>Chat Support - UMI</div>
@@ -411,25 +548,12 @@
             
             <div class="input-group">
                 <input type="text" id="chatInput" placeholder="Type your message...">
-                <button class="emoji-btn" onclick="toggleEmojiPicker()">😊</button>
-                <button class="voice-btn" onclick="toggleVoiceRecording()">🎤</button>
-                <button class="image-upload-btn" onclick="document.getElementById('imageInput').click()">📷</button>
+                <button class="voice-btn" onclick="toggleVoiceRecording()" title="Voice input">🎤</button>
+                <button class="image-upload-btn" onclick="document.getElementById('imageInput').click()" title="Upload image">📷</button>
                 <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
                 <button onclick="sendMessage()">Send</button>
             </div>
         </div>
-    </div>
-
-    <div class="emoji-picker" id="emojiPicker">
-        <span onclick="insertEmoji('😊')">😊</span>
-        <span onclick="insertEmoji('❤️')">❤️</span>
-        <span onclick="insertEmoji('👍')">👍</span>
-        <span onclick="insertEmoji('👋')">👋</span>
-        <span onclick="insertEmoji('🙏')">🙏</span>
-        <span onclick="insertEmoji('😍')">😍</span>
-        <span onclick="insertEmoji('🎉')">🎉</span>
-        <span onclick="insertEmoji('🔥')">🔥</span>
-        <span onclick="insertEmoji('💯')">💯</span>
     </div>
 
     <script>
@@ -437,6 +561,7 @@
         let isMinimized = false;
         let isRecording = false;
         let recognition = null;
+        let isFirstOpen = true;
         
         const chatbotContainer = document.getElementById('chatbotContainer');
         const chatMessages = document.getElementById('chatMessages');
@@ -445,12 +570,8 @@
         const imagePreview = document.getElementById('imagePreview');
         const selectedImage = document.getElementById('selectedImage');
         const notificationBadge = document.getElementById('notificationBadge');
-        const emojiPicker = document.getElementById('emojiPicker');
         const voiceRecording = document.getElementById('voiceRecording');
         
-        const ollamaUrl = 'http://localhost:11434';
-        const model = 'llava:latest';
-        let history = [];
         let selectedImageBase64 = null;
         let messageCount = 0;
 
@@ -482,9 +603,13 @@
             chatbotContainer.style.display = isChatOpen ? 'block' : 'none';
             notificationBadge.style.display = 'none';
             
-            if (isChatOpen && chatMessages.querySelectorAll('.message').length === 0) {
+            if (isChatOpen && isFirstOpen) {
+                isFirstOpen = false;
                 addMessage('Hello! How can I help you today?', 'bot');
-                addQuickReplies(['What services do you offer?', 'I need technical support', 'Pricing information']);
+                addQuickReplies(['What services do you offer?', 'I need technical support', 'Pricing information', 'Contact support', 'Documentation']);
+                
+                // Test de connexion différé pour ne pas interférer avec le message de bienvenue
+                setTimeout(testConnectionSilent, 2000);
             }
         }
 
@@ -498,7 +623,6 @@
             isChatOpen = false;
             isMinimized = false;
             chatbotContainer.style.display = 'none';
-            // Optionally clear chat history
         }
 
         function showNotification() {
@@ -509,7 +633,12 @@
         function addMessage(text, sender, imageSrc = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message ' + sender + '-message';
-            messageDiv.textContent = text;
+            
+            // Gérer le texte et l'image
+            if (text) {
+                const textNode = document.createTextNode(text);
+                messageDiv.appendChild(textNode);
+            }
             
             if (imageSrc) {
                 const img = document.createElement('img');
@@ -520,8 +649,18 @@
                 messageDiv.appendChild(img);
             }
             
-            chatMessages.insertBefore(messageDiv, typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Créer un conteneur avec clearfix
+            const container = document.createElement('div');
+            container.className = 'clearfix';
+            container.appendChild(messageDiv);
+            
+            // Insérer avant l'indicateur de frappe
+            chatMessages.insertBefore(container, typingIndicator);
+            
+            // Scroll automatique avec délai pour l'animation
+            setTimeout(() => {
+                scrollToBottom();
+            }, 100);
             
             if (sender === 'bot') {
                 messageCount++;
@@ -529,7 +668,14 @@
             }
         }
 
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
         function addQuickReplies(replies) {
+            const container = document.createElement('div');
+            container.className = 'clearfix';
+            
             const quickRepliesDiv = document.createElement('div');
             quickRepliesDiv.className = 'quick-replies';
             
@@ -540,28 +686,14 @@
                 button.onclick = () => {
                     chatInput.value = reply;
                     sendMessage();
-                    quickRepliesDiv.remove();
+                    container.remove();
                 };
                 quickRepliesDiv.appendChild(button);
             });
             
-            chatMessages.insertBefore(quickRepliesDiv, typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function insertQuickReply(text) {
-            chatInput.value = text;
-            chatInput.focus();
-        }
-
-        function insertEmoji(emoji) {
-            chatInput.value += emoji;
-            emojiPicker.style.display = 'none';
-            chatInput.focus();
-        }
-
-        function toggleEmojiPicker() {
-            emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+            container.appendChild(quickRepliesDiv);
+            chatMessages.insertBefore(container, typingIndicator);
+            scrollToBottom();
         }
 
         function toggleVoiceRecording() {
@@ -589,7 +721,7 @@
 
         function showTyping() {
             typingIndicator.style.display = 'block';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            scrollToBottom();
         }
 
         function hideTyping() {
@@ -632,7 +764,6 @@
             document.body.appendChild(modal);
         }
 
-        // Remplacer la fonction sendMessage() dans chatbot.html
         async function sendMessage() {
             const message = chatInput.value.trim();
             if (!message && !selectedImageBase64) return;
@@ -675,6 +806,13 @@
                     addMessage(`❌ ${data.error}`, 'bot');
                 } else {
                     addMessage(data.response, 'bot');
+                    
+                    // Quick replies contextuelles
+                    if (data.response && data.response.toLowerCase().includes('help')) {
+                        addQuickReplies(['Contact support', 'View documentation', 'FAQ']);
+                    } else if (data.response && data.response.toLowerCase().includes('service')) {
+                        addQuickReplies(['Pricing', 'Features', 'Demo request', 'Free trial']);
+                    }
                 }
 
             } catch (error) {
@@ -697,7 +835,27 @@
             }
         }
 
-        // Ajouter une fonction de test de connexion
+        // Test de connexion silencieux (sans afficher de message d'erreur)
+        async function testConnectionSilent() {
+            try {
+                const response = await fetch('http://localhost:5000/api/status');
+                const data = await response.json();
+                console.log('🔍 Status API (silent):', data);
+                
+                // Ne pas afficher de message d'erreur, juste logger
+                if (!data.ollama_connected) {
+                    console.warn('⚠️ Ollama non connecté');
+                } else if (!data.llava_ready) {
+                    console.warn('⚠️ Modèle llava non disponible');
+                } else {
+                    console.log('✅ Système prêt');
+                }
+            } catch (error) {
+                console.warn('⚠️ Impossible de contacter le serveur Flask');
+            }
+        }
+
+        // Test de connexion avec message (pour le debug)
         async function testConnection() {
             try {
                 const response = await fetch('http://localhost:5000/api/status');
@@ -716,27 +874,15 @@
             }
         }
 
-        // Tester la connexion au chargement
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(testConnection, 1000);
-        });
-
-// Close emoji picker when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!emojiPicker.contains(e.target) && !e.target.classList.contains('emoji-btn')) {
-                emojiPicker.style.display = 'none';
-            }
-        });
-
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
 
-        // Auto-scroll to bottom when new messages arrive
-        const observer = new MutationObserver(() => {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Observer pour auto-scroll amélioré
+        const resizeObserver = new ResizeObserver(() => {
+            scrollToBottom();
         });
-        observer.observe(chatMessages, { childList: true });
+        resizeObserver.observe(chatMessages);
     </script>
 </body>
 </html>
