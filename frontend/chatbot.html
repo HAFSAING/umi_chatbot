@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,37 +64,36 @@
             border: 2px solid #F59331;
             display: block;
         }
-        .chatbot-header .close-btn {
+        .chatbot-header .header-buttons {
             position: absolute;
             top: 15px;
             right: 15px;
+            display: flex;
+            gap: 5px;
+        }
+        .chatbot-header .header-btn {
             background: rgba(255,255,255,0.2);
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             padding: 5px 8px;
             border-radius: 50%;
             transition: background 0.3s;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .chatbot-header .close-btn:hover {
+        .chatbot-header .header-btn:hover {
             background: rgba(255,255,255,0.3);
         }
-        .chatbot-header .minimize-btn {
-            position: absolute;
-            top: 15px;
-            right: 50px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 5px 8px;
-            border-radius: 50%;
-            transition: background 0.3s;
+        .chatbot-header .clear-btn {
+            background: rgba(255, 107, 107, 0.8);
         }
-        .chatbot-header .minimize-btn:hover {
-            background: rgba(255,255,255,0.3);
+        .chatbot-header .clear-btn:hover {
+            background: rgba(255, 107, 107, 1);
         }
 
         @keyframes pulse {
@@ -124,7 +111,6 @@
             scroll-behavior: smooth;
         }
         
-        /* Amélioration du scrolling vertical */
         .chatbot-messages::-webkit-scrollbar {
             width: 8px;
         }
@@ -142,7 +128,6 @@
             background: linear-gradient(135deg, #006b8a, #004d5c);
         }
         
-        /* Scrollbar pour Firefox */
         .chatbot-messages {
             scrollbar-width: thin;
             scrollbar-color: #0080A2 #f1f1f1;
@@ -407,7 +392,6 @@
             scrollbar-color: #0080A2 transparent;
         }
         
-        /* Scrollbar horizontal pour les quick-replies */
         .quick-replies::-webkit-scrollbar {
             height: 4px;
         }
@@ -460,14 +444,84 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Clear fix pour les floats */
+        /* Modal de confirmation */
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            margin: 20px;
+            text-align: center;
+            animation: modalSlide 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        @keyframes modalSlide {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-content h3 {
+            color: #0080A2;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .modal-content p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 100px;
+        }
+        .modal-btn.cancel {
+            background: #e0e0e0;
+            color: #666;
+        }
+        .modal-btn.cancel:hover {
+            background: #d0d0d0;
+        }
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+        
         .clearfix::after {
             content: "";
             display: table;
             clear: both;
         }
         
-        /* Amélioration responsive */
         @media (max-width: 480px) {
             .chatbot-container {
                 width: 95%;
@@ -519,8 +573,12 @@
             <img src="Logo-umi.png" alt="UMI Logo" id="umiLogo" style="display: none;" 
                  onload="this.style.display='block'; document.getElementById('logoPlaceholder').style.display='none';" 
                  onerror="this.style.display='none'; document.getElementById('logoPlaceholder').style.display='flex';">
-            <button class="minimize-btn" onclick="minimizeChat()">−</button>
-            <button class="close-btn" onclick="closeChat()">×</button>
+            
+            <div class="header-buttons">
+                <button class="header-btn clear-btn" onclick="showClearConfirmation()" title="Supprimer la conversation">🗑️</button>
+                <button class="header-btn" onclick="minimizeChat()" title="Minimiser">−</button>
+                <button class="header-btn" onclick="closeChat()" title="Fermer">×</button>
+            </div>
             <div>Chat Support - UMI</div>
         </div>
         
@@ -556,6 +614,18 @@
         </div>
     </div>
 
+    <!-- Modal de confirmation pour supprimer la conversation -->
+    <div class="confirmation-modal" id="clearModal">
+        <div class="modal-content">
+            <h3>Supprimer la conversation ?</h3>
+            <p>Cette action supprimera définitivement tous les messages de la conversation actuelle. Cette action est irréversible.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="hideClearConfirmation()">Annuler</button>
+                <button class="modal-btn confirm" onclick="confirmClearChat()">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let isChatOpen = false;
         let isMinimized = false;
@@ -571,6 +641,7 @@
         const selectedImage = document.getElementById('selectedImage');
         const notificationBadge = document.getElementById('notificationBadge');
         const voiceRecording = document.getElementById('voiceRecording');
+        const clearModal = document.getElementById('clearModal');
         
         let selectedImageBase64 = null;
         let messageCount = 0;
@@ -606,9 +677,7 @@
             if (isChatOpen && isFirstOpen) {
                 isFirstOpen = false;
                 addMessage('Hello! How can I help you today?', 'bot');
-                addQuickReplies(['What services do you offer?', 'I need technical support', 'Pricing information', 'Contact support', 'Documentation']);
-                
-                // Test de connexion différé pour ne pas interférer avec le message de bienvenue
+                addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
                 setTimeout(testConnectionSilent, 2000);
             }
         }
@@ -630,11 +699,46 @@
             notificationBadge.style.display = 'flex';
         }
 
+        // Fonctions de suppression du chat
+        function showClearConfirmation() {
+            clearModal.style.display = 'flex';
+        }
+
+        function hideClearConfirmation() {
+            clearModal.style.display = 'none';
+        }
+
+        function confirmClearChat() {
+            clearChatHistory();
+            hideClearConfirmation();
+        }
+
+        function clearChatHistory() {
+            // Supprimer tous les messages sauf l'indicateur de typing
+            const messages = chatMessages.querySelectorAll('.clearfix');
+            messages.forEach(message => message.remove());
+            
+            // Réinitialiser les compteurs
+            messageCount = 0;
+            
+            // Ajouter un message de confirmation
+            addMessage('💬 Conversation supprimée. Comment puis-je vous aider ?', 'bot');
+            addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
+            
+            console.log('✅ Historique de chat supprimé');
+        }
+
+        // Fermer le modal en cliquant à l'extérieur
+        clearModal.addEventListener('click', function(e) {
+            if (e.target === clearModal) {
+                hideClearConfirmation();
+            }
+        });
+
         function addMessage(text, sender, imageSrc = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message ' + sender + '-message';
             
-            // Gérer le texte et l'image
             if (text) {
                 const textNode = document.createTextNode(text);
                 messageDiv.appendChild(textNode);
@@ -649,15 +753,12 @@
                 messageDiv.appendChild(img);
             }
             
-            // Créer un conteneur avec clearfix
             const container = document.createElement('div');
             container.className = 'clearfix';
             container.appendChild(messageDiv);
             
-            // Insérer avant l'indicateur de frappe
             chatMessages.insertBefore(container, typingIndicator);
             
-            // Scroll automatique avec délai pour l'animation
             setTimeout(() => {
                 scrollToBottom();
             }, 100);
@@ -763,12 +864,10 @@
             modal.onclick = () => document.body.removeChild(modal);
             document.body.appendChild(modal);
         }
-
-        async function sendMessage() {
+async function sendMessage() {
             const message = chatInput.value.trim();
             if (!message && !selectedImageBase64) return;
 
-            // Affichage du message utilisateur
             if (selectedImageBase64) {
                 addMessage(message || 'Image uploaded', 'user', 'data:image/jpeg;base64,' + selectedImageBase64);
             } else {
@@ -778,7 +877,11 @@
             showTyping();
 
             try {
-                console.log('🚀 Envoi à l\'API:', { message, hasImage: !!selectedImageBase64 });
+                console.log('🚀 Envoi à l\'API:', { 
+                    message: message, 
+                    hasImage: !!selectedImageBase64,
+                    url: 'http://localhost:5000/api/chat'
+                });
                 
                 const response = await fetch('http://localhost:5000/api/chat', {
                     method: 'POST',
@@ -795,8 +898,13 @@
                 console.log('📡 Réponse HTTP:', response.status, response.statusText);
 
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ error: 'Erreur inconnue' }));
-                    throw new Error(`HTTP ${response.status}: ${errorData.error || response.statusText}`);
+                    let errorData;
+                    try {
+                        errorData = await response.json();
+                    } catch {
+                        errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+                    }
+                    throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -804,30 +912,56 @@
                 
                 if (data.error) {
                     addMessage(`❌ ${data.error}`, 'bot');
-                } else {
+                } else if (data.response) {
                     addMessage(data.response, 'bot');
                     
+                    // Ajouter des informations de debug si disponibles
+                    if (data.model_used || data.rag_used) {
+                        const debugInfo = [];
+                        if (data.model_used) debugInfo.push(`Modèle: ${data.model_used}`);
+                        if (data.rag_used) debugInfo.push('RAG utilisé');
+                        console.log(`🔧 Debug: ${debugInfo.join(', ')}`);
+                    }
+                    
                     // Quick replies contextuelles
-                    if (data.response && data.response.toLowerCase().includes('help')) {
+                    if (data.response.toLowerCase().includes('help')) {
                         addQuickReplies(['Contact support', 'View documentation', 'FAQ']);
-                    } else if (data.response && data.response.toLowerCase().includes('service')) {
+                    } else if (data.response.toLowerCase().includes('service')) {
                         addQuickReplies(['Pricing', 'Features', 'Demo request', 'Free trial']);
                     }
+                } else {
+                    addMessage('❌ Réponse vide du serveur', 'bot');
                 }
 
             } catch (error) {
-                console.error('❌ Erreur:', error);
+                console.error('❌ Erreur complète:', error);
                 
                 let errorMessage = '❌ Erreur: ';
+                
                 if (error.message.includes('Failed to fetch')) {
-                    errorMessage += 'Impossible de contacter le serveur. Vérifiez que le serveur Flask fonctionne.';
-                } else if (error.message.includes('503')) {
-                    errorMessage += 'Service indisponible. Vérifiez qu\'Ollama et le modèle llava sont installés.';
+                    errorMessage += 'Impossible de contacter le serveur. Vérifications:';
+                    addMessage(errorMessage, 'bot');
+                    addMessage('1. Le serveur Flask est-il démarré?', 'bot');
+                    addMessage('2. Testez: http://localhost:5000/api/test', 'bot');
+                    addMessage('3. Vérifiez la console pour plus de détails', 'bot');
+                } else if (error.message.includes('503') || error.message.includes('Service')) {
+                    errorMessage += 'Service indisponible. Vérifications:';
+                    addMessage(errorMessage, 'bot');
+                    addMessage('1. Ollama est-il démarré? (ollama serve)', 'bot');
+                    addMessage('2. Le modèle llava est-il installé? (ollama list)', 'bot');
+                    addMessage('3. Testez: ollama run llava "hello"', 'bot');
+                } else if (error.message.includes('timeout')) {
+                    errorMessage += 'Timeout - La requête a pris trop de temps';
+                    addMessage(errorMessage, 'bot');
+                    addMessage('💡 Essayez avec un message plus court', 'bot');
                 } else {
                     errorMessage += error.message;
+                    addMessage(errorMessage, 'bot');
                 }
                 
-                addMessage(errorMessage, 'bot');
+                // Proposer des actions de diagnostic
+                addQuickReplies(['Test connexion', 'Vérifier status', 'Aide technique']);
+                
             } finally {
                 chatInput.value = '';
                 removeImage();
@@ -835,14 +969,115 @@
             }
         }
 
-        // Test de connexion silencieux (sans afficher de message d'erreur)
+        // Nouvelle fonction pour tester la connexion
+        async function testConnectionDetailed() {
+            addMessage('🔧 Test de connexion en cours...', 'bot');
+            
+            try {
+                // Test 1: API de base
+                const testResponse = await fetch('http://localhost:5000/api/test');
+                if (testResponse.ok) {
+                    addMessage('✅ Serveur Flask accessible', 'bot');
+                } else {
+                    addMessage('❌ Serveur Flask inaccessible', 'bot');
+                    return;
+                }
+                
+                // Test 2: Status complet
+                const statusResponse = await fetch('http://localhost:5000/api/status');
+                if (statusResponse.ok) {
+                    const statusData = await statusResponse.json();
+                    
+                    addMessage(`📊 Status système:`, 'bot');
+                    addMessage(`- Ollama: ${statusData.ollama_connected ? '✅' : '❌'}`, 'bot');
+                    addMessage(`- Llava: ${statusData.llava_ready ? '✅' : '❌'}`, 'bot');
+                    addMessage(`- RAG: ${statusData.rag_available ? '✅' : '❌'}`, 'bot');
+                    
+                    if (statusData.models_available && statusData.models_available.length > 0) {
+                        addMessage(`- Modèles: ${statusData.models_available.join(', ')}`, 'bot');
+                    }
+                    
+                } else {
+                    addMessage('❌ Impossible de récupérer le status', 'bot');
+                }
+                
+            } catch (error) {
+                addMessage(`❌ Erreur test: ${error.message}`, 'bot');
+                addMessage('💡 Vérifiez que le serveur est démarré', 'bot');
+            }
+        }
+
+        // Améliorer la fonction testConnectionSilent
+        async function testConnectionSilent() {
+            try {
+                const response = await fetch('http://localhost:5000/api/status');
+                const data = await response.json();
+                console.log('🔍 Status silencieux:', data);
+                
+                if (!data.ollama_connected) {
+                    console.warn('⚠️ Ollama non connecté');
+                    showNotification();
+                } else if (!data.llava_ready) {
+                    console.warn('⚠️ Modèle llava non disponible');
+                    showNotification();
+                } else {
+                    console.log('✅ Système opérationnel');
+                }
+            } catch (error) {
+                console.warn('⚠️ Impossible de contacter le serveur:', error.message);
+            }
+        }
+
+        // Gérer les quick replies spéciaux
+        function handleQuickReply(reply) {
+            if (reply === 'Test connexion') {
+                testConnectionDetailed();
+            } else if (reply === 'Vérifier status') {
+                chatInput.value = 'Quel est le status du système?';
+                sendMessage();
+            } else if (reply === 'Aide technique') {
+                addMessage('🔧 Aide technique:', 'bot');
+                addMessage('1. Vérifiez que Ollama tourne: ollama serve', 'bot');
+                addMessage('2. Vérifiez les modèles: ollama list', 'bot');
+                addMessage('3. Testez llava: ollama run llava "hello"', 'bot');
+                addMessage('4. Redémarrez le serveur si nécessaire', 'bot');
+            } else {
+                // Quick reply normal
+                chatInput.value = reply;
+                sendMessage();
+            }
+        }
+
+        // Modifier la fonction addQuickReplies pour utiliser handleQuickReply
+        function addQuickReplies(replies) {
+            const container = document.createElement('div');
+            container.className = 'clearfix';
+            
+            const quickRepliesDiv = document.createElement('div');
+            quickRepliesDiv.className = 'quick-replies';
+            
+            replies.forEach(reply => {
+                const button = document.createElement('button');
+                button.className = 'quick-reply';
+                button.textContent = reply;
+                button.onclick = () => {
+                    handleQuickReply(reply);
+                    container.remove();
+                };
+                quickRepliesDiv.appendChild(button);
+            });
+            
+            container.appendChild(quickRepliesDiv);
+            chatMessages.insertBefore(container, typingIndicator);
+            scrollToBottom();
+        }
+
         async function testConnectionSilent() {
             try {
                 const response = await fetch('http://localhost:5000/api/status');
                 const data = await response.json();
                 console.log('🔍 Status API (silent):', data);
                 
-                // Ne pas afficher de message d'erreur, juste logger
                 if (!data.ollama_connected) {
                     console.warn('⚠️ Ollama non connecté');
                 } else if (!data.llava_ready) {
@@ -855,7 +1090,6 @@
             }
         }
 
-        // Test de connexion avec message (pour le debug)
         async function testConnection() {
             try {
                 const response = await fetch('http://localhost:5000/api/status');
@@ -883,6 +1117,13 @@
             scrollToBottom();
         });
         resizeObserver.observe(chatMessages);
+
+        // Gérer la touche Échap pour fermer le modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideClearConfirmation();
+            }
+        });
     </script>
 </body>
 </html>
