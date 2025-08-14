@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import time
+import requests
 
 # Import des modules RAG et memory (avec gestion d'erreur)
 try:
@@ -32,7 +33,7 @@ document_loader = None
 rag_initialized = False
 
 def test_ollama_connection():
-    """Test de connexion Ollama amélioré avec retry"""
+    """Test de connexion Ollama amélioré avec retry et API REST"""
     max_retries = 3
     retry_delay = 2
     
@@ -40,13 +41,16 @@ def test_ollama_connection():
         try:
             print(f"🔍 Test de connexion à Ollama (tentative {attempt + 1}/{max_retries})...")
             
-            # Test de base avec timeout
-            response = ollama.list()
+            # Test avec API REST directement (plus fiable)
+            response = requests.get("http://localhost:11434/api/tags", timeout=10)
             
-            if not response or 'models' not in response:
-                raise Exception("Réponse Ollama invalide")
-                
-            model_names = [model.get('name', '') for model in response.get('models', [])]
+            if response.status_code != 200:
+                raise Exception(f"Ollama API HTTP {response.status_code}")
+            
+            data = response.json()
+            models = data.get('models', [])
+            model_names = [model.get('name', '') for model in models]
+            
             print(f"✅ Modèles disponibles: {model_names}")
             
             # Vérifier llava spécifiquement
@@ -60,33 +64,43 @@ def test_ollama_connection():
             print(f"✅ Modèles llava disponibles: {llava_models}")
             return True, llava_models
             
+        except requests.exceptions.ConnectionError:
+            print(f"❌ Tentative {attempt + 1} échouée: Ollama service non accessible")
+        except requests.exceptions.Timeout:
+            print(f"❌ Tentative {attempt + 1} échouée: Timeout")
         except Exception as e:
             print(f"❌ Tentative {attempt + 1} échouée: {e}")
-            if attempt < max_retries - 1:
-                print(f"⏳ Nouvelle tentative dans {retry_delay} secondes...")
-                time.sleep(retry_delay)
-            else:
-                print("❌ Toutes les tentatives de connexion ont échoué")
-                print("💡 Vérifiez que Ollama est démarré: ollama serve")
-                return False, []
+        
+        if attempt < max_retries - 1:
+            print(f"⏳ Nouvelle tentative dans {retry_delay} secondes...")
+            time.sleep(retry_delay)
+    
+    print("❌ Toutes les tentatives de connexion ont échoué")
+    print("💡 Vérifiez que Ollama est démarré: ollama serve")
+    return False, []
 
 def get_best_llava_model():
     """Trouve le meilleur modèle llava disponible"""
     try:
-        response = ollama.list()
-        model_names = [model.get('name', '') for model in response.get('models', [])]
+        response = requests.get("http://localhost:11434/api/tags", timeout=5)
+        if response.status_code != 200:
+            return None
+            
+        data = response.json()
+        model_names = [model.get('name', '') for model in data.get('models', [])]
         
         # Priorités des modèles llava (du meilleur au moins bon)
         preferred_models = [
             'llava:latest',
             'llava:13b',
             'llava:7b',
+            'llava:34b',
             'llava'
         ]
         
         for preferred in preferred_models:
             for available in model_names:
-                if preferred in available.lower():
+                if preferred.lower() == available.lower():
                     return available
         
         # Fallback: n'importe quel modèle contenant "llava"
@@ -95,7 +109,8 @@ def get_best_llava_model():
                 return available
                 
         return None
-    except Exception:
+    except Exception as e:
+        print(f"Erreur get_best_llava_model: {e}")
         return None
 
 def initialize_rag_system():
@@ -155,24 +170,32 @@ def initialize_rag_system():
         return False
 
 def test_model_response(model_name):
-    """Test si un modèle répond correctement"""
+    """Test si un modèle répond correctement via API REST"""
     try:
         print(f"🧪 Test du modèle {model_name}...")
         
-        response = ollama.chat(
-            model=model_name,
-            messages=[{
-                'role': 'user',
-                'content': 'Hello, respond with just "OK" to confirm you work.'
-            }],
-            options={'temperature': 0.1}
+        payload = {
+            "model": model_name,
+            "messages": [
+                {"role": "user", "content": "Hello, respond with just 'OK' to confirm you work."}
+            ],
+            "stream": False,
+            "options": {"temperature": 0.1, "num_predict": 10}
+        }
+        
+        response = requests.post(
+            "http://localhost:11434/api/chat",
+            json=payload,
+            timeout=20
         )
         
-        if response and 'message' in response and 'content' in response['message']:
-            print(f"✅ Modèle {model_name} fonctionne!")
+        if response.status_code == 200:
+            result = response.json()
+            content = result.get('message', {}).get('content', '')
+            print(f"✅ Modèle {model_name} fonctionne! Réponse: '{content[:30]}'")
             return True
         else:
-            print(f"❌ Réponse invalide du modèle {model_name}")
+            print(f"❌ Erreur test modèle {model_name}: HTTP {response.status_code}")
             return False
             
     except Exception as e:
@@ -202,9 +225,8 @@ Réponds en utilisant prioritairement les informations du contexte fourni."""
 
 @app.route('/')
 def serve_html():
-    """Servir le fichier HTML depuis le dossier parent"""
+    """Servir le fichier HTML depuis le dossier frontend"""
     try:
-        # Le HTML est dans ../frontend par rapport au script backend/app.py
         return send_from_directory('../frontend', 'chatbot.html')
     except Exception as e:
         return f"Erreur: Impossible de charger chatbot.html - {e}", 404
@@ -236,6 +258,10 @@ def status():
                 'supported_files': docs_info['supported_files'],
                 'files_by_type': docs_info.get('files_by_type', {}),
                 'supported_extensions': document_loader.get_supported_extensions() if document_loader else ['.pdf']
+            },
+            'server_info': {
+                'python_version': sys.version,
+                'working_directory': str(Path.cwd())
             }
         })
         
@@ -300,7 +326,7 @@ def chat():
         model_to_use = get_best_llava_model()
         if not model_to_use:
             return jsonify({
-                'error': 'Aucun modèle llava disponible. Installez avec: ollama pull llava:latest'
+                'error': 'Aucun modèle llava disponible. Vérifiez: ollama list | grep llava'
             }), 503
 
         print(f"🎯 Utilisation du modèle: {model_to_use}")
@@ -308,7 +334,7 @@ def chat():
         # Test rapide du modèle avant utilisation
         if not test_model_response(model_to_use):
             return jsonify({
-                'error': f'Le modèle {model_to_use} ne répond pas correctement'
+                'error': f'Le modèle {model_to_use} ne répond pas correctement. Redémarrez Ollama.'
             }), 503
 
         # Enrichissement avec RAG (seulement pour les messages texte sans image)
@@ -320,32 +346,45 @@ def chat():
         else:
             enhanced_message = user_message or "Décris cette image en détail"
 
-        # Préparation du message pour Ollama
-        messages = [{
-            'role': 'user',
-            'content': enhanced_message
-        }]
+        # Préparation du payload pour API REST
+        payload = {
+            "model": model_to_use,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": enhanced_message
+                }
+            ],
+            "stream": False,
+            "options": {
+                "temperature": 0.7,
+                "num_predict": 512,
+                "num_ctx": 2048
+            }
+        }
         
         if image_b64:
-            messages[0]['images'] = [image_b64]
+            payload["messages"][0]["images"] = [image_b64]
 
-        print("🤖 Appel à Ollama...")
+        print("🤖 Appel à Ollama via API REST...")
         
         try:
-            response = ollama.chat(
-                model=model_to_use,
-                messages=messages,
-                options={
-                    'temperature': 0.7,
-                    'num_predict': 512,  # Limiter la longueur de réponse
-                    'timeout': 60       # Timeout plus long
-                }
+            response = requests.post(
+                "http://localhost:11434/api/chat",
+                json=payload,
+                timeout=60
             )
             
-            if not response or 'message' not in response or 'content' not in response['message']:
-                raise Exception("Réponse Ollama invalide")
+            if response.status_code != 200:
+                error_detail = response.text[:300] if response.text else "Pas de détails"
+                raise Exception(f"Ollama API HTTP {response.status_code}: {error_detail}")
             
-            bot_response = response['message']['content'].strip()
+            result = response.json()
+            
+            if 'message' not in result or 'content' not in result['message']:
+                raise Exception("Réponse Ollama invalide - structure inattendue")
+            
+            bot_response = result['message']['content'].strip()
             
             if not bot_response:
                 bot_response = "Désolé, je n'ai pas pu générer une réponse appropriée."
@@ -374,6 +413,16 @@ def chat():
                 'rag_used': rag_used
             })
             
+        except requests.exceptions.Timeout:
+            print("❌ Timeout Ollama (>60s)")
+            return jsonify({
+                'error': 'Timeout: La génération a pris trop de temps. Essayez avec un message plus court.'
+            }), 503
+        except requests.exceptions.ConnectionError:
+            print("❌ Connexion Ollama impossible")
+            return jsonify({
+                'error': 'Impossible de se connecter à Ollama. Vérifiez qu\'Ollama est démarré: ollama serve'
+            }), 503
         except Exception as e:
             print(f"❌ Erreur Ollama détaillée: {e}")
             error_msg = str(e)
@@ -384,6 +433,8 @@ def chat():
                 error_msg = "Timeout: La génération a pris trop de temps."
             elif "model" in error_msg.lower():
                 error_msg = f"Problème avec le modèle {model_to_use}. Essayez de le réinstaller."
+            elif "503" in error_msg or "service" in error_msg.lower():
+                error_msg = "Service Ollama indisponible. Redémarrez Ollama."
             
             return jsonify({
                 'error': f'Erreur Ollama: {error_msg}'
@@ -394,6 +445,79 @@ def chat():
         return jsonify({
             'error': f'Erreur serveur interne: {str(e)}'
         }), 500
+
+@app.route('/api/debug/ollama', methods=['GET'])
+def debug_ollama():
+    """Endpoint de debug pour Ollama"""
+    try:
+        debug_info = {}
+        
+        # Test connexion basique
+        try:
+            response = requests.get("http://localhost:11434/api/version", timeout=5)
+            if response.status_code == 200:
+                debug_info['ollama_version'] = response.json()
+                debug_info['ollama_accessible'] = True
+            else:
+                debug_info['ollama_accessible'] = False
+                debug_info['ollama_error'] = f"HTTP {response.status_code}"
+        except Exception as e:
+            debug_info['ollama_accessible'] = False
+            debug_info['ollama_error'] = str(e)
+        
+        # Liste des modèles
+        try:
+            response = requests.get("http://localhost:11434/api/tags", timeout=10)
+            if response.status_code == 200:
+                models_data = response.json()
+                debug_info['models'] = models_data.get('models', [])
+                debug_info['llava_models'] = [
+                    m['name'] for m in debug_info['models'] 
+                    if 'llava' in m['name'].lower()
+                ]
+            else:
+                debug_info['models_error'] = f"HTTP {response.status_code}"
+        except Exception as e:
+            debug_info['models_error'] = str(e)
+        
+        # Test de génération simple
+        llava_models = debug_info.get('llava_models', [])
+        if llava_models:
+            try:
+                payload = {
+                    "model": llava_models[0],
+                    "messages": [{"role": "user", "content": "Say 'TEST_OK'"}],
+                    "stream": False,
+                    "options": {"temperature": 0.1, "num_predict": 5}
+                }
+                
+                response = requests.post(
+                    "http://localhost:11434/api/chat",
+                    json=payload,
+                    timeout=15
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    debug_info['generation_test'] = {
+                        'success': True,
+                        'response': result.get('message', {}).get('content', '')[:100]
+                    }
+                else:
+                    debug_info['generation_test'] = {
+                        'success': False,
+                        'error': f"HTTP {response.status_code}"
+                    }
+            except Exception as e:
+                debug_info['generation_test'] = {
+                    'success': False,
+                    'error': str(e)
+                }
+        
+        return jsonify(debug_info)
+        
+    except Exception as e:
+        return jsonify({'debug_error': str(e)}), 500
 
 if __name__ == '__main__':
     print("🔧 Tests de démarrage...")
@@ -415,6 +539,7 @@ if __name__ == '__main__':
         print("   1. Vérifiez qu'Ollama est démarré: ollama serve")
         print("   2. Installez llava: ollama pull llava:latest")
         print("   3. Redémarrez Ollama si nécessaire")
+        print("   4. Testez manuellement: ollama run llava:latest 'hello'")
     
     # Tentative d'initialisation RAG
     rag_ok = initialize_rag_system()
@@ -427,9 +552,11 @@ if __name__ == '__main__':
     print("   - Frontend: http://localhost:5000")
     print("   - API Test: http://localhost:5000/api/test")
     print("   - API Status: http://localhost:5000/api/status")
+    print("   - Debug Ollama: http://localhost:5000/api/debug/ollama")
     print("\n🔧 Pour déboguer:")
     print("   1. Testez: http://localhost:5000/api/test")
-    print("   2. Status: http://localhost:5000/api/status")
-    print("   3. Si problèmes: Vérifiez les logs ci-dessus")
+    print("   2. Status: http://localhost:5000/api/status")  
+    print("   3. Debug Ollama: http://localhost:5000/api/debug/ollama")
+    print("   4. Si problèmes: Vérifiez les logs ci-dessus")
     
     app.run(host='0.0.0.0', port=5000, debug=True)
