@@ -80,16 +80,32 @@
         }
         
         .chatbot-header {
-            background: #ffffff;
+            background: white;
             color: white;
             padding: 15px;
             text-align: center;
             position: relative;
-            border-bottom: 2px solid #F59331;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-radius: 15px 15px 0 0;
+        }
+
+
+        .chatbot-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                #0080A2 0px,
+                #0080A2 15px,
+                #F59331 15px,
+                #F59331 30px
+            );
+        }  z-index: 100;
         }
         .chatbot-header .logo-center {
             display: flex;
@@ -191,26 +207,6 @@
             float: right;
         }
         
-        .bot-message::before {
-            content: 'UMI';
-            position: absolute;
-            left: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 10px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #F59331, #e8841f);
-            color: white;
-            border-radius: 50%;
-            padding: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
 
         .bot-message {
             background: linear-gradient(135deg, #0080A2, #006b8a);
@@ -219,7 +215,7 @@
             border-bottom-left-radius: 5px;
             box-shadow: 0 2px 8px rgba(0, 128, 162, 0.3);
             float: left;
-            margin-left: 50px;
+            margin-left: 5px;
             position: relative;
         }
         
@@ -263,26 +259,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .typing-indicator::before {
-            content: 'UMI';
-            position: absolute;
-            left: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 10px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #F59331, #e8841f);
-            color: white;
-            border-radius: 50%;
-            padding: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
+
 
         .typing-indicator {
             display: none;
@@ -296,7 +273,7 @@
             float: left;
             clear: both;
             position: relative;
-            margin-left: 50px;
+            margin-left: 5px;
         }
 
         .typing-dots {
@@ -324,7 +301,6 @@
             position: sticky;
             bottom: 0;
             z-index: 100;
-            border-radius: 0 0 15px 15px;
         }
 
         .chatbot-input {
@@ -570,25 +546,8 @@
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(245, 147, 49, 0.6);
         }
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff4444;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            animation: bounce 1s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
+
+
 
         .quick-replies {
             display: flex;
@@ -766,12 +725,164 @@
         .status.ok::after {
             content: " 💾 Mémoire active";
         }
+         .language-selector {
+            background: #5F5F5F;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .language-dropdown {
+            position: relative;
+            min-width: 140px;
+        }
+
+        .language-current {
+            background: #5F5F5F;
+            border: 2px solid #5F5F5F;
+            border-radius: 8px;
+            width: 45px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: white;
+            font-weight: bold;
+        }
+
+        .language-current:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .language-current.open {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+
+        .language-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateY(-10px);
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+            border: 2px solid #5F5F5F;
+            border-top: none;
+            /* Remove conflicting properties */
+            width: auto; /* Changed from fixed 45px */
+            height: auto; /* Changed from fixed 38px */
+            display: block; /* Changed from flex */
+            min-width: 45px; 
+        }
+
+        .language-options.open {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .language-option {
+            background: transparent;
+            border: none;
+            width: 100%;
+            padding: 12px 15px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #5F5F5F;
+        }
+
+        .language-option:hover {
+            background:linear-gradient(135deg, #e0e0e0, #d0d0d0) ;
+        }
+
+        .language-option.active {
+            color: #5F5F5F;
+            font-weight: bold;
+        }
+
+        .language-option:last-child {
+            border-radius: 0 0 13px 13px;
+        }
+
+        .language-icon {
+            font-size: 16px;
+            min-width: 20px;
+        }
+
+                .nav-buttons-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-button {
+            background: #5F5F5F;
+            border: 2px solid #5F5F5F;
+            border-radius: 8px;
+            width: 50px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: rgba(95, 95, 95, 0.8);
+        }
+
+        .nav-button-icon {
+            font-size: 16px;
+        }
+
+        /* Ajustement pour l'affichage sur mobile */
+        @media (max-width: 480px) {
+            .language-selector {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            
+            .nav-buttons-container {
+                order: 2;
+            }
+            
+            .language-dropdown {
+                order: 1;
+                min-width: 120px;
+            }
+        }
     </style>
 </head>
 <body>
     <button class="chatbot-toggle" onclick="toggleChat()" id="chatToggle">
         💬
-        <div class="notification-badge" id="notificationBadge">1</div>
     </button>
     
     <div class="chatbot-container" id="chatbotContainer">
@@ -814,7 +925,35 @@
                 </div>
             </div>
         </div>
+    
+
+        <div class="language-selector">
+            <div class="nav-buttons-container">
+                <button class="nav-button" onclick="openWhatsApp()" title="WhatsApp">
+                    <span class="nav-button-icon">UMI</span>
+                </button>
+                <button class="nav-button" onclick="openEmailForm()" title="Email">
+                    <span class="nav-button-icon">✉︎</span>
+                </button>
+                <button class="nav-button" onclick="openWhatsApp()" title="WhatsApp">
+                    <span class="nav-button-icon">✆</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="language-dropdown" id="languageDropdown">
+            <div class="language-current" onclick="toggleLanguageDropdown()" id="languageCurrent">
+                <span class="language-icon" id="currentLangIcon">🗣</span>
+                <span class="language-text" id="currentLangText">En</span>
+            </div>
+            <div class="language-options" id="languageOptions">
+                <button class="language-option active" onclick="selectLanguage('en')" data-lang="en">En</button>
+                <button class="language-option" onclick="selectLanguage('fr')" data-lang="fr">Fr</button>
+                <button class="language-option" onclick="selectLanguage('ar')" data-lang="ar">Ar</button>
+            </div>
+        </div>
     </div>
+
 
     <div class="confirmation-modal" id="clearModal">
         <div class="modal-content">
@@ -843,7 +982,6 @@
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
         const typingIndicator = document.getElementById('typingIndicator');
-        const notificationBadge = document.getElementById('notificationBadge');
         const clearModal = document.getElementById('clearModal');
         const voiceBtn = document.getElementById('voiceBtn');
         const fileUploadBtn = document.getElementById('fileUploadBtn');
@@ -946,7 +1084,6 @@
             isChatOpen = !isChatOpen;
             isMinimized = false;
             chatbotContainer.style.display = isChatOpen ? 'block' : 'none';
-            notificationBadge.style.display = 'none';
             
             if (isChatOpen && isFirstOpen) {
                 isFirstOpen = false;
@@ -959,18 +1096,12 @@
         function minimizeChat() {
             isMinimized = true;
             chatbotContainer.style.display = 'none';
-            showNotification();
         }
 
         function closeChat() {
             isChatOpen = false;
             isMinimized = false;
             chatbotContainer.style.display = 'none';
-        }
-
-        function showNotification() {
-            notificationBadge.textContent = messageCount + 1;
-            notificationBadge.style.display = 'flex';
         }
 
         function showClearConfirmation() {
@@ -1177,10 +1308,7 @@
                 scrollMessagesToBottom();
             }, 100);
             
-            if (sender === 'bot') {
-                messageCount++;
-                if (isMinimized) showNotification();
-            }
+
         }
 
         function scrollMessagesToBottom() {
@@ -1460,10 +1588,8 @@
                 
                 if (!data.ollama_connected) {
                     console.warn('⚠️ Ollama non connecté');
-                    showNotification();
                 } else if (!data.llava_ready) {
                     console.warn('⚠️ Modèle llava non disponible');
-                    showNotification();
                 } else {
                     console.log('✅ Système opérationnel');
                 }
