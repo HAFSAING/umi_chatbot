@@ -414,8 +414,7 @@ def initialize_rag_endpoint():
 def chat():
     try:
         logger.info("📨 Nouvelle requête chat")
-        
-        # Validation des données
+
         data = request.json
         if not data:
             return jsonify({'error': 'Données manquantes'}), 400
@@ -423,19 +422,17 @@ def chat():
         user_message = data.get('message', '').strip()
         image_b64 = data.get('image')
         files_data = data.get('files', [])
-        
-        # Gestion des sessions
+
         session_id = get_or_create_session(data)
-        
+
         if not user_message and not image_b64 and not files_data:
             return jsonify({'error': 'Message requis'}), 400
 
         logger.info(f"💬 Message: '{user_message[:50]}{'...' if len(user_message) > 50 else ''}'")
-        logger.info(f"🖼️ Image: {'Oui' if image_b64 else 'Non'}")
+        logger.info(f"🏞️ Image: {'Oui' if image_b64 else 'Non'}")
         logger.info(f"📎 Fichiers: {len(files_data)}")
         logger.info(f"🆔 Session: {session_id[:8]}...")
 
-        # ===== VÉRIFICATION RÉPONSES RAPIDES =====
         if user_message and not image_b64 and not files_data and quick_response_system:
             logger.info("🔍 Vérification réponses rapides...")
             

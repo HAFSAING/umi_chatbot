@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UmiBot</title>
     <style>
-        body {
+ body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -14,28 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #F59331, #e8841f);
-            border-radius: 4px;
-            border: 1px solid #e0e0e0;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #e8841f, #d4761b);
-        }
-        
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #F59331 #f1f1f1;
+            overflow: hidden;
         }
         
         .chatbot-messages::-webkit-scrollbar {
@@ -53,12 +32,11 @@
         .chatbot-messages::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, #006b8a, #004c5e);
         }
-        
+
         .chatbot-messages {
             scrollbar-width: thin;
             scrollbar-color: #0080A2 #e3f2fd;
         }
-        
         .chatbot-container {
             position: fixed;
             bottom: 100px;
@@ -71,8 +49,8 @@
             display: none;
             z-index: 1000;
             animation: slideUp 0.3s ease-out;
-            overflow-y: auto;
             overflow-x: hidden;
+            overflow: hidden;
         }
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
@@ -90,7 +68,6 @@
             z-index: 100;
         }
 
-
         .chatbot-header::after {
             content: '';
             position: absolute;
@@ -105,7 +82,7 @@
                 #F59331 15px,
                 #F59331 30px
             );
-        }  z-index: 100;
+            z-index: 100;
         }
         .chatbot-header .logo-center {
             display: flex;
@@ -123,12 +100,12 @@
             height: 40px;
             border-radius: 50%;
             background:#5F5F5F;
-            display: none; /* Changé de 'none' par défaut */
+            display: none;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 14px; /* Augmenté de 12px à 14px */
-            color: white; /* Changé de #F59331 à white pour une meilleure lisibilité */ /* Ajout d'une bordure orange */
+            font-size: 14px;
+            color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .chatbot-header .header-buttons {
@@ -158,14 +135,12 @@
             background: rgba(255,255,255,0.3);
         }
 
-
         .chatbot-header .header-btn:nth-child(2):hover {
-            background: #FFC107; /* Jaune plus foncé au hover */
+            background: #FFC107;
         }
 
-
         .chatbot-header .header-btn:nth-child(3):hover {
-            background: #CC0000; /* Rouge plus foncé au hover */
+            background: #CC0000;
         }
 
         .chatbot-header .clear-btn:hover {
@@ -173,7 +148,7 @@
         }
 
         .chatbot-messages {
-            padding: 15px;
+            padding: 8px;
             background: linear-gradient(to bottom, #f8f9fa, #ffffff);
             min-height: 280px;
             max-height: 280px;
@@ -206,7 +181,6 @@
             box-shadow: 0 2px 8px rgba(245, 147, 49, 0.3);
             float: right;
         }
-        
 
         .bot-message {
             background: linear-gradient(135deg, #0080A2, #006b8a);
@@ -259,8 +233,6 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-
-
         .typing-indicator {
             display: none;
             padding: 12px 16px;
@@ -306,7 +278,7 @@
         .chatbot-input {
             display: flex;
             flex-direction: column;
-            padding: 15px;
+            padding: 12px;
         }
         .input-group {
             display: flex;
@@ -547,8 +519,6 @@
             box-shadow: 0 6px 20px rgba(245, 147, 49, 0.6);
         }
 
-
-
         .quick-replies {
             display: flex;
             flex-wrap: wrap;
@@ -692,154 +662,28 @@
                 text-align: center;
             }
         }
-        .user-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin: 10px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
 
-        .memory-indicator {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,255,0,0.1);
-            border: 1px solid rgba(0,255,0,0.3);
-            border-radius: 15px;
-            padding: 5px 10px;
-            font-size: 0.8em;
-            color: #00aa00;
-        }
-
-        .session-info {
-            font-size: 0.8em;
-            color: #666;
-            text-align: center;
-            margin: 5px 0;
-            }
-
-        .status.ok::after {
-            content: " 💾 Mémoire active";
-        }
-         .language-selector {
+        .footer {
             background: #5F5F5F;
-            padding: 12px 15px;
+            padding: 8px 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             border-top: 1px solid #e0e0e0;
         }
 
-        .language-dropdown {
-            position: relative;
-            min-width: 140px;
-        }
-
-        .language-current {
-            background: #5F5F5F;
-            border: 2px solid #5F5F5F;
-            border-radius: 8px;
-            width: 45px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            color: white;
-            font-weight: bold;
-        }
-
-        .language-current:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .language-current.open {
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-
-        .language-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            opacity: 0;
-            transform: translateY(-10px);
-            visibility: hidden;
-            transition: all 0.3s;
-            z-index: 1000;
-            border: 2px solid #5F5F5F;
-            border-top: none;
-            /* Remove conflicting properties */
-            width: auto; /* Changed from fixed 45px */
-            height: auto; /* Changed from fixed 38px */
-            display: block; /* Changed from flex */
-            min-width: 45px; 
-        }
-
-        .language-options.open {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
-
-        .language-option {
-            background: transparent;
-            border: none;
-            width: 100%;
-            padding: 12px 15px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #5F5F5F;
-        }
-
-        .language-option:hover {
-            background:linear-gradient(135deg, #e0e0e0, #d0d0d0) ;
-        }
-
-        .language-option.active {
-            color: #5F5F5F;
-            font-weight: bold;
-        }
-
-        .language-option:last-child {
-            border-radius: 0 0 13px 13px;
-        }
-
-        .language-icon {
-            font-size: 16px;
-            min-width: 20px;
-        }
-
-                .nav-buttons-container {
+        .footer-btns-container {
             display: flex;
             gap: 12px;
             align-items: center;
         }
 
-        .nav-button {
+        .footer-btn {
             background: #5F5F5F;
             border: 2px solid #5F5F5F;
             border-radius: 8px;
-            width: 50px;
+            width: 85px;
             height: 38px;
             display: flex;
             align-items: center;
@@ -851,32 +695,345 @@
             font-weight: bold;
         }
 
-        .nav-button:hover {
+        .footer-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             background: rgba(95, 95, 95, 0.8);
         }
 
-        .nav-button-icon {
-            font-size: 16px;
+        .footer-btn.active {
+            background: linear-gradient(135deg, #F59331, #e8841f);
+            border-color: #F59331;
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 147, 49, 0.4);
         }
 
-        /* Ajustement pour l'affichage sur mobile */
+        .footer-btn.active:hover {
+            background: linear-gradient(135deg, #e8841f, #d4761b);
+            box-shadow: 0 6px 16px rgba(245, 147, 49, 0.5);
+        }
+
+        .footer-btn-icon {
+            font-size: 16px;
+        }
+        .footer-btn.active {
+            background: linear-gradient(135deg, #0080A2, #006b8a) !important;
+            border-color: #0080A2 !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(0, 128, 162, 0.4) !important;
+        }
+
+        .footer-btn.active:hover {
+            background: linear-gradient(135deg, #006b8a, #004c5e) !important;
+            box-shadow: 0 6px 16px rgba(0, 128, 162, 0.5) !important;
+        }
+
         @media (max-width: 480px) {
-            .language-selector {
+            .footer {
                 flex-direction: row;
                 justify-content: space-between;
                 gap: 10px;
             }
-            
-            .nav-buttons-container {
-                order: 2;
-            }
-            
-            .language-dropdown {
-                order: 1;
-                min-width: 120px;
-            }
+        }
+
+        .whatsapp-form-message {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff) !important;
+            color: #333 !important;
+            border: 2px solid #25D366;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 12px 0;
+            max-width: 95%;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
+        .email-form-message {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff) !important;
+            color: #333 !important;
+            border: 2px solid #F59331;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 12px 0;
+            max-width: 95%;
+            box-shadow: 0 4px 12px rgba(245, 147, 49, 0.2);
+        }
+
+        .email-form-message h3 {
+            color: #0080A2;
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .email-form-message .email-form-group {
+            margin-bottom: 15px;
+        }
+
+        .email-form-message .email-form-group input,
+        .email-form-message .email-form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .email-form-message .email-form-group input:focus,
+        .email-form-message .email-form-group textarea:focus {
+            outline: none;
+            border-color: #F59331;
+            box-shadow: 0 0 0 2px rgba(245, 147, 49, 0.2);
+        }
+
+        .email-form-message .email-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .email-form-message .email-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .email-form-message .email-checkbox {
+            width: 16px !important;
+            height: 16px !important;
+            margin: 0 !important;
+        }
+
+        .email-form-message .email-checkbox-label {
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .email-form-message .email-form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .email-form-message .email-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+            font-size: 13px;
+        }
+
+        .email-form-message .email-btn.cancel {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .email-form-message .email-btn.cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .email-form-message .email-btn.submit {
+            background: linear-gradient(135deg, #F59331, #e8841f);
+            color: white;
+        }
+
+        .email-form-message .email-btn.submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(245, 147, 49, 0.4);
+        }
+
+        .email-form-message .email-btn.submit:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .whatsapp-form-message {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff) !important;
+            color: #333 !important;
+            border: 2px solid #25D366;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 12px 0;
+            max-width: 95%;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
+        .whatsapp-form-message h3 {
+            color: #25D366;
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            text-align: center;
+        }
+        .language-form-message {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff) !important;
+            color: #333 !important;
+            border: 2px solid #0080A2;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 12px 0;
+            max-width: 95%;
+            box-shadow: 0 4px 12px rgba(0, 128, 162, 0.2);
+        }
+
+        .language-form-message h3 {
+            color: #0080A2;
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .language-form-message .language-form-group {
+            margin-bottom: 15px;
+        }
+
+        .language-form-message .language-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .language-form-message .language-form-group select,
+        .language-form-message .language-form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .language-form-message .language-form-group select:focus,
+        .language-form-message .language-form-group textarea:focus {
+            outline: none;
+            border-color: #0080A2;
+            box-shadow: 0 0 0 2px rgba(0, 128, 162, 0.2);
+        }
+
+        .language-form-message .language-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .language-form-message .language-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .language-form-message .language-checkbox {
+            width: 16px !important;
+            height: 16px !important;
+            margin: 0 !important;
+        }
+
+        .language-form-message .language-checkbox-label {
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .language-form-message .language-form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .language-form-message .language-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+            font-size: 13px;
+        }
+
+        .language-form-message .language-btn.cancel {
+            background: linear-gradient(135deg, #0080A2, #006b8a);
+            color: white;
+        }
+
+        .language-form-message .language-btn.cancel:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 128, 162, 0.4);
+        }
+
+        .language-form-message .language-btn.submit {
+            background: linear-gradient(135deg, #0080A2, #006b8a);
+            color: white;
+        }
+
+        .language-form-message .language-btn.submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 128, 162, 0.4);
+        }
+
+        .language-form-message .language-btn.submit:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .language-buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .language-button {
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 10px 15px;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .language-button:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .language-button.selected {
+            background: linear-gradient(135deg, #0080A2, #006b8a);
+            color: white;
+            border-color: #0080A2;
+            box-shadow: 0 4px 8px rgba(0, 128, 162, 0.3);
+        }
+
+        .language-button.selected:hover {
+            background: linear-gradient(135deg, #006b8a, #004c5e);
+        }
+
+        .language-flag {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -927,31 +1084,21 @@
         </div>
     
 
-        <div class="language-selector">
-            <div class="nav-buttons-container">
-                <button class="nav-button" onclick="openWhatsApp()" title="WhatsApp">
-                    <span class="nav-button-icon">UMI</span>
+        <div class="footer">
+                <button class="footer-btn" onclick="openChatbot()" title="chatbot">
+                    <span class="footer-btn-icon">UMI</span>
                 </button>
-                <button class="nav-button" onclick="openEmailForm()" title="Email">
-                    <span class="nav-button-icon">✉︎</span>
+                <button class="footer-btn" onclick="openEmailForm()" title="Email">
+                    <span class="footer-btn-icon">✉︎</span>
                 </button>
-                <button class="nav-button" onclick="openWhatsApp()" title="WhatsApp">
-                    <span class="nav-button-icon">✆</span>
+                <button class="footer-btn" onclick="openWhatsApp()" title="WhatsApp">
+                    <span class="footer-btn-icon">✆</span>
                 </button>
-            </div>
+                <button class="footer-btn" onclick="openlanguage()" title="language">
+                    <span class="footer-btn-icon">🗣</span>
+                </button>
         </div>
-
-        <div class="language-dropdown" id="languageDropdown">
-            <div class="language-current" onclick="toggleLanguageDropdown()" id="languageCurrent">
-                <span class="language-icon" id="currentLangIcon">🗣</span>
-                <span class="language-text" id="currentLangText">En</span>
-            </div>
-            <div class="language-options" id="languageOptions">
-                <button class="language-option active" onclick="selectLanguage('en')" data-lang="en">En</button>
-                <button class="language-option" onclick="selectLanguage('fr')" data-lang="fr">Fr</button>
-                <button class="language-option" onclick="selectLanguage('ar')" data-lang="ar">Ar</button>
-            </div>
-        </div>
+        
     </div>
 
 
@@ -965,6 +1112,8 @@
             </div>
         </div>
     </div>
+    
+</div>
 
     <script>
         let currentSessionId = null;
@@ -992,6 +1141,9 @@
         let selectedFiles = [];
         const MAX_FILES = 6;
         let messageCount = 0;
+        let isEmailFormActive = false;
+        let isWhatsAppFormActive = false;
+        let isLanguageFormActive = false;
 
         function updateInputIndicators() {
             const hasText = chatInput.value.trim().length > 0;
@@ -1079,7 +1231,6 @@
                 return false;
             }
         }
-
         function toggleChat() {
             isChatOpen = !isChatOpen;
             isMinimized = false;
@@ -1087,6 +1238,13 @@
             
             if (isChatOpen && isFirstOpen) {
                 isFirstOpen = false;
+                
+                // Marquer le bouton UMI comme actif par défaut
+                const umiButton = document.querySelector('.footer-btn[onclick="openChatbot()"]');
+                if (umiButton) {
+                    umiButton.classList.add('active');
+                }
+                
                 addMessage('Hello! How can I help you today?', 'bot');
                 addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
                 setTimeout(testConnectionSilent, 2000);
@@ -1643,8 +1801,7 @@
                 
                 if (data.status === 'ok') {
                     statusHTML = '🟢 Système opérationnel';
-                    
-                    // Informations sur l'utilisateur et la session
+
                     if (currentSession) {
                         statusHTML += ` | Session: ${currentSession.substring(0, 8)}...`;
                     }
@@ -1703,6 +1860,605 @@
             logoImage.style.display = 'none';
             logoFallback.style.display = 'flex';
         }
+        
+    function openEmailForm() {
+        const emailModal = document.getElementById('emailModal');
+        emailModal.style.display = 'flex';
+        
+        // Clear form when opening
+        document.getElementById('emailForm').reset();
+        updateEmailSubmitButton();
+    }
+
+    function hideEmailForm() {
+        const emailModal = document.getElementById('emailModal');
+        emailModal.style.display = 'none';
+    }
+
+    function updateEmailSubmitButton() {
+        const form = document.getElementById('emailForm');
+        const submitBtn = document.getElementById('emailSubmitBtn');
+        const nameField = document.getElementById('emailName');
+        const emailField = document.getElementById('emailAddress');
+        const messageField = document.getElementById('emailMessage');
+        const termsCheckbox = document.getElementById('emailTerms');
+        
+        const isValid = nameField.value.trim() !== '' && 
+                    emailField.value.trim() !== '' && 
+                    messageField.value.trim() !== '' && 
+                    termsCheckbox.checked;
+        
+        submitBtn.disabled = !isValid;
+    }
+
+    function handleEmailSubmit(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const emailData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            message: formData.get('message'),
+            terms: formData.get('terms')
+        };
+        
+        // Simulate sending email
+        const submitBtn = document.getElementById('emailSubmitBtn');
+        const originalText = submitBtn.textContent;
+        
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        
+        // Simulate API call
+        setTimeout(() => {
+            console.log('Email data:', emailData);
+            
+            // Show success message in chat
+            addMessage(`Email sent successfully! We'll get back to you at ${emailData.email}`, 'bot');
+            
+            // Hide modal
+            hideEmailForm();
+            
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            
+
+        }, 1500);
+    }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Remplacer les anciens event listeners
+    document.querySelectorAll('.footer-btn').forEach(btn => {
+        // Supprimer l'ancien event listener
+        btn.removeEventListener('click', function() {
+            resetAllButtonStates();
+            this.classList.add('active');
+        });
+    });
+    
+    // Ajouter les nouveaux event listeners spécifiques
+    const buttons = document.querySelectorAll('.footer-btn');
+    buttons.forEach((btn, index) => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Identifier le bouton cliqué
+            const isUmiButton = this.textContent.trim() === 'UMI' || this.onclick?.toString().includes('openChatbot');
+            const isEmailButton = this.textContent.includes('✉') || this.onclick?.toString().includes('openEmailForm');
+            const isWhatsAppButton = this.textContent.includes('✆') || this.onclick?.toString().includes('openWhatsApp');
+            const isLanguageButton = this.textContent.includes('🗣') || this.onclick?.toString().includes('openlanguage');
+            
+            // Réinitialiser tous les états
+            resetAllButtonStates();
+            
+            // Marquer ce bouton comme actif
+            this.classList.add('active');
+            
+            // Exécuter l'action appropriée
+            if (isUmiButton) {
+                // Pour UMI, afficher les messages d'accueil
+                addMessage('Hello! How can I help you today?', 'bot');
+                addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
+            } else if (isEmailButton) {
+                addEmailFormMessage();
+            } else if (isWhatsAppButton) {
+                addWhatsAppFormMessage();
+            } else if (isLanguageButton) {
+                addLanguageFormMessage();
+            }
+        });
+    });
+});
+
+    // Close modal when clicking outside
+    document.getElementById('emailModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideEmailForm();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideEmailForm();
+        }
+    });
+    function openEmailForm() {
+    // Remove the modal approach and add form directly to chat
+    addEmailFormMessage();
+    }
+
+function addEmailFormMessage() {
+    // Set email form as active
+    isEmailFormActive = true;
+    
+    // Hide input controls
+    hideInputControls();
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message email-form-message';
+    
+    messageDiv.innerHTML = `
+        <h3>📧 Send us an email</h3>
+        <form id="chatEmailForm" onsubmit="handleChatEmailSubmit(event)">
+            <div class="email-form-group">
+                <input 
+                    type="text" 
+                    id="chatEmailName" 
+                    name="name" 
+                    placeholder="Your name" 
+                    required
+                >
+            </div>
+            
+            <div class="email-form-group">
+                <input 
+                    type="email" 
+                    id="chatEmailAddress" 
+                    name="email" 
+                    placeholder="Your email" 
+                    required
+                >
+            </div>
+            
+            <div class="email-form-group">
+                <textarea 
+                    id="chatEmailMessage" 
+                    name="message" 
+                    placeholder="Your message" 
+                    required
+                ></textarea>
+            </div>
+            
+            <div class="email-checkbox-group">
+                <input 
+                    type="checkbox" 
+                    id="chatEmailTerms" 
+                    name="terms" 
+                    class="email-checkbox"
+                    required
+                >
+                <label for="chatEmailTerms" class="email-checkbox-label">
+                    I accept the website terms
+                </label>
+            </div>
+            
+            <div class="email-form-buttons">
+                <button type="button" class="email-btn cancel" onclick="removeChatEmailForm(this)">
+                    Cancel
+                </button>
+                <button type="submit" class="email-btn submit" id="chatEmailSubmitBtn" disabled>
+                    Send Email
+                </button>
+            </div>
+        </form>
+    `;
+    
+    const container = document.createElement('div');
+    container.className = 'clearfix email-form-container';
+    container.appendChild(messageDiv);
+    
+    chatMessages.insertBefore(container, typingIndicator);
+    scrollMessagesToBottom();
+    
+    // Add event listeners for validation
+    const form = messageDiv.querySelector('#chatEmailForm');
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('input', updateChatEmailSubmitButton);
+        input.addEventListener('change', updateChatEmailSubmitButton);
+    });
+}
+
+// Add new function to hide input controls
+function hideInputControls() {
+    const inputContainer = document.querySelector('.input-group');
+    
+    if (inputContainer) {
+        inputContainer.style.display = 'none';
+    }
+
+}
+
+
+function showInputControls() {
+    const inputContainer = document.querySelector('.input-group');
+    const languageSelector = document.querySelector('.footer');
+    
+    if (inputContainer) {
+        inputContainer.style.display = 'block';
+    }
+    if (languageSelector) {
+        languageSelector.style.display = 'flex';
+    }
+}
+
+
+function updateChatEmailSubmitButton() {
+    const submitBtn = document.getElementById('chatEmailSubmitBtn');
+    const nameField = document.getElementById('chatEmailName');
+    const emailField = document.getElementById('chatEmailAddress');
+    const messageField = document.getElementById('chatEmailMessage');
+    const termsCheckbox = document.getElementById('chatEmailTerms');
+    
+    if (submitBtn && nameField && emailField && messageField && termsCheckbox) {
+        const isValid = nameField.value.trim() !== '' && 
+                    emailField.value.trim() !== '' && 
+                    messageField.value.trim() !== '' && 
+                    termsCheckbox.checked;
+        
+        submitBtn.disabled = !isValid;
+    }
+}
+
+function handleChatEmailSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const emailData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+        terms: formData.get('terms')
+    };
+    
+    const submitBtn = document.getElementById('chatEmailSubmitBtn');
+    const originalText = submitBtn.textContent;
+    
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    
+    // Simulate sending email
+    setTimeout(() => {
+        console.log('Email data:', emailData);
+
+        const formContainer = event.target.closest('.email-form-container');
+        formContainer.remove();
+
+        isEmailFormActive = false;
+        showInputControls();
+
+        addMessage(`✅ Email sent successfully! We'll get back to you at ${emailData.email}`, 'bot');
+        
+
+    }, 1500);
+}
+
+
+function removeChatEmailForm(button) {
+    const formContainer = button.closest('.email-form-container');
+    formContainer.remove();
+
+    isEmailFormActive = false;
+    showInputControls();
+    
+    addMessage('Email form cancelled', 'bot');
+}
+
+// Update your existing hideEmailForm function (keep it for backward compatibility):
+function hideEmailForm() {
+    const emailModal = document.getElementById('emailModal');
+    if (emailModal) {
+        emailModal.style.display = 'none';
+    }
+}
+
+//************************************
+        function addWhatsAppFormMessage() {
+            isWhatsAppFormActive = true;
+            hideInputControls();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message whatsapp-form-message';
+            
+            messageDiv.innerHTML = `
+                <h3>📱 Send us a WhatsApp</h3>
+                <form id="chatWhatsAppForm" onsubmit="handleChatWhatsAppSubmit(event)">
+                    <div class="email-form-group">
+                        <input type="text" id="chatWhatsAppName" name="name" placeholder="Your name" required>
+                    </div>
+                    
+                    <div class="email-form-group">
+                        <textarea id="chatWhatsAppMessage" name="message" placeholder="Your message" required></textarea>
+                    </div>
+
+                    <div class="email-form-buttons">
+                        <button type="button" class="email-btn cancel" onclick="removeChatWhatsAppForm(this)">Cancel</button>
+                        <button type="submit" class="email-btn submit" id="chatWhatsAppSubmitBtn" disabled style="background: #25D366;">Send WhatsApp</button>
+                    </div>
+                </form>
+            `;
+            
+            const container = document.createElement('div');
+            container.className = 'clearfix whatsapp-form-container';
+            container.appendChild(messageDiv);
+            
+            chatMessages.insertBefore(container, typingIndicator);
+            scrollMessagesToBottom();
+            
+            const inputs = messageDiv.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateChatWhatsAppSubmitButton);
+                input.addEventListener('change', updateChatWhatsAppSubmitButton);
+            });
+        }
+
+        function updateChatWhatsAppSubmitButton() {
+            const submitBtn = document.getElementById('chatWhatsAppSubmitBtn');
+            const nameField = document.getElementById('chatWhatsAppName');
+            const messageField = document.getElementById('chatWhatsAppMessage');
+            
+            if (submitBtn && nameField && messageField) {
+                const isValid = nameField.value.trim() !== '' && 
+                            messageField.value.trim() !== '' ;
+                
+                submitBtn.disabled = !isValid;
+            }
+        }
+
+        function handleChatWhatsAppSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('chatWhatsAppName').value;
+            const userPhone ='212771757377'
+            const message = document.getElementById('chatWhatsAppMessage').value;
+            
+            
+            // Construire le message à envoyer
+            const customMessage = `Name: ${name}%0AMessage: ${message}`;
+            
+            // Créer l'URL WhatsApp
+            const whatsappUrl = `https://wa.me/${userPhone}?text=${customMessage}`;
+            
+            // Ouvrir WhatsApp dans une nouvelle fenêtre
+            window.open(whatsappUrl, '_blank');
+            
+            // Supprimer le formulaire
+            const formContainer = event.target.closest('.whatsapp-form-container');
+            formContainer.remove();
+            
+            // Réinitialiser l'état et afficher les contrôles
+            isWhatsAppFormActive = false;
+            showInputControls();
+            
+            // Afficher un message de confirmation
+            addMessage('✅ WhatsApp message prepared. Please check the new window to send it.', 'bot');
+        }
+
+        function removeChatWhatsAppForm(button) {
+            const formContainer = button.closest('.whatsapp-form-container');
+            formContainer.remove();
+            
+            isWhatsAppFormActive = false;
+            showInputControls();
+            
+            addMessage('WhatsApp form cancelled', 'bot');
+        }
+
+        function openWhatsApp() {
+            addWhatsAppFormMessage();
+        }
+//************************************
+
+function resetAllButtonStates() {
+    // Supprimer la classe active de tous les boutons
+    document.querySelectorAll('.footer-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Réinitialiser les états des formulaires
+    isEmailFormActive = false;
+    isWhatsAppFormActive = false;
+    isLanguageFormActive = false;
+    
+    // Supprimer tous les formulaires actifs
+    document.querySelectorAll('.email-form-container, .whatsapp-form-container, .language-form-container').forEach(container => {
+        container.remove();
+    });
+
+    // NOUVEAU: Supprimer l'historique des messages sauf le typing indicator
+    const messages = chatMessages.querySelectorAll('.clearfix');
+    messages.forEach(message => message.remove());
+    messageCount = 0;
+
+    showInputControls();
+}
+
+document.querySelectorAll('.footer-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        resetAllButtonStates();     // enlève active des autres
+        this.classList.add('active'); // ajoute active au bouton cliqué
+    });
+});
+
+function setActiveButton(buttonElement) {
+    resetAllButtonStates();
+    buttonElement.classList.add('active');
+}
+
+        function addLanguageFormMessage() {
+            isLanguageFormActive = true;
+            hideInputControls();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message language-form-message';
+            
+            messageDiv.innerHTML = `
+                <h3>🗣️ Select Your Preferred Language</h3>
+                
+                <div class="language-buttons-container" id="languageButtonsContainer" style="flex-direction: column; align-items: center; gap: 10px;">
+                    <button type="button" class="language-button" data-lang="english" style="width: 150px; justify-content: center;">
+                        <span class="language-flag">🇬🇧</span> English
+                    </button>
+                    <button type="button" class="language-button" data-lang="french" style="width: 150px; justify-content: center;">
+                        <span class="language-flag">🇫🇷</span> Français
+                    </button>
+                    <button type="button" class="language-button" data-lang="arabic" style="width: 150px; justify-content: center;">
+                        <span class="language-flag">🇸🇦</span> العربية
+                    </button>
+                    <button type="button" class="language-button" data-lang="spanish" style="width: 150px; justify-content: center;">
+                        <span class="language-flag">🇪🇸</span> Español
+                    </button>
+                </div>
+                
+                <div class="language-form-buttons">
+                    <button type="button" class="language-btn cancel" onclick="removeChatLanguageForm(this)">
+                        Cancel
+                    </button>
+                    <button type="button" class="language-btn submit" id="chatLanguageSubmitBtn" disabled>
+                        Confirm Selection
+                    </button>
+                </div>
+            `;
+            
+            const container = document.createElement('div');
+            container.className = 'clearfix language-form-container';
+            container.appendChild(messageDiv);
+            
+            chatMessages.insertBefore(container, typingIndicator);
+            scrollMessagesToBottom();
+            
+            const languageButtons = messageDiv.querySelectorAll('.language-button');
+            let selectedLanguage = null;
+            
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    languageButtons.forEach(btn => btn.classList.remove('selected'));
+
+                    this.classList.add('selected');
+                    selectedLanguage = this.getAttribute('data-lang');
+                    
+                    updateChatLanguageSubmitButton(selectedLanguage);
+                });
+            });
+            
+            const messageField = messageDiv.querySelector('#chatLanguageMessage');
+            const termsCheckbox = messageDiv.querySelector('#chatLanguageTerms');
+            
+            if (messageField) {
+                messageField.addEventListener('input', () => updateChatLanguageSubmitButton(selectedLanguage));
+            }
+            
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', () => updateChatLanguageSubmitButton(selectedLanguage));
+            }
+            
+            // Écouteur pour le bouton de soumission
+            const submitBtn = messageDiv.querySelector('#chatLanguageSubmitBtn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    handleChatLanguageSubmit(selectedLanguage);
+                });
+            }
+        }
+
+        function updateChatLanguageSubmitButton(selectedLanguage) {
+            const submitBtn = document.getElementById('chatLanguageSubmitBtn');
+            
+            if (submitBtn) {
+                // Correction: Vérifier uniquement si une langue est sélectionnée
+                const isValid = selectedLanguage !== null;
+                
+                submitBtn.disabled = !isValid;
+            }
+        }
+
+        function handleChatLanguageSubmit(selectedLanguage) {
+            const messageField = document.getElementById('chatLanguageMessage');
+            const message = messageField ? messageField.value.trim() : '';
+            
+            const languageData = {
+                language: selectedLanguage,
+                message: message,
+                terms: true
+            };
+            
+            const submitBtn = document.getElementById('chatLanguageSubmitBtn');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+            
+            // Simuler le traitement
+            setTimeout(() => {
+                console.log('Language support data:', languageData);
+                
+                // Supprimer le formulaire
+                const formContainer = document.querySelector('.language-form-container');
+                if (formContainer) {
+                    formContainer.remove();
+                }
+                
+                // Réinitialiser l'état et afficher les contrôles
+                isLanguageFormActive = false;
+                showInputControls();
+                const languageNames = {
+                    'english': 'English',
+                    'french': 'French',
+                    'arabic': 'Arabic', 
+                    'spanish': 'Spanish'
+                };
+                
+                const selectedLanguageName = languageNames[selectedLanguage] || selectedLanguage;
+                addMessage(`✅ Language preference set to ${selectedLanguageName}! We'll communicate with you in ${selectedLanguageName}.`, 'bot');
+                
+            }, 1500);
+        }
+
+        function removeChatLanguageForm(button) {
+            const formContainer = button.closest('.language-form-container');
+            if (formContainer) {
+                formContainer.remove();
+            }
+            
+            isLanguageFormActive = false;
+            showInputControls();
+            
+            addMessage('Language selection cancelled', 'bot');
+        }
+
+        function openLanguageForm() {
+            addLanguageFormMessage();
+        }
+        
+        function openlanguage() {
+            openLanguageForm();
+        }
+        function openChatbot() {
+            resetAllButtonStates();
+            
+            // Marquer le bouton UMI comme actif
+            const umiButton = document.querySelector('.footer-btn[onclick="openChatbot()"]');
+            if (umiButton) {
+                umiButton.classList.add('active');
+            }
+            
+            // Afficher les messages d'accueil uniquement pour UMI
+            addMessage('Hello! How can I help you today?', 'bot');
+            addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
+        }
+
     </script>
 </body>
 </html>
