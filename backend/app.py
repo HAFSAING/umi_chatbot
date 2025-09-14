@@ -490,7 +490,7 @@ def chat():
 
         # Traitement du message utilisateur (extraction du nom, etc.)
         processed_message, name_detected = process_user_message(user_message, session_id)
-        
+        print("achraf")
         # Trouver le meilleur modèle llava disponible
         model_to_use = get_best_llava_model()
         if not model_to_use:

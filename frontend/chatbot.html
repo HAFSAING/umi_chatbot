@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UmiBot</title>
     <style>
- body {
+     body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -2084,13 +2084,13 @@ function hideInputControls() {
 
 function showInputControls() {
     const inputContainer = document.querySelector('.input-group');
-    const languageSelector = document.querySelector('.footer');
+    const footer = document.querySelector('.footer'); // Ajout du footer
     
     if (inputContainer) {
-        inputContainer.style.display = 'block';
+        inputContainer.style.display = 'flex'; // Changed from 'block' to 'flex'
     }
-    if (languageSelector) {
-        languageSelector.style.display = 'flex';
+    if (footer) { // Vérifier que le footer existe
+        footer.style.display = 'flex';
     }
 }
 
@@ -2277,12 +2277,12 @@ function resetAllButtonStates() {
         container.remove();
     });
 
-    // NOUVEAU: Supprimer l'historique des messages sauf le typing indicator
-    const messages = chatMessages.querySelectorAll('.clearfix');
-    messages.forEach(message => message.remove());
-    messageCount = 0;
+    // SUPPRIMÉ: Ne plus supprimer l'historique des messages
+    // const messages = chatMessages.querySelectorAll('.clearfix');
+    // messages.forEach(message => message.remove());
+    // messageCount = 0;
 
-    showInputControls();
+    showInputControls(); // Toujours afficher les contrôles
 }
 
 document.querySelectorAll('.footer-btn').forEach(btn => {
@@ -2445,19 +2445,37 @@ function setActiveButton(buttonElement) {
         function openlanguage() {
             openLanguageForm();
         }
-        function openChatbot() {
-            resetAllButtonStates();
-            
-            // Marquer le bouton UMI comme actif
-            const umiButton = document.querySelector('.footer-btn[onclick="openChatbot()"]');
-            if (umiButton) {
-                umiButton.classList.add('active');
-            }
-            
-            // Afficher les messages d'accueil uniquement pour UMI
-            addMessage('Hello! How can I help you today?', 'bot');
-            addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
-        }
+function openChatbot() {
+    // Réinitialiser les états des autres formulaires mais garder les messages
+    isEmailFormActive = false;
+    isWhatsAppFormActive = false;
+    isLanguageFormActive = false;
+    
+    // Supprimer uniquement les formulaires actifs
+    document.querySelectorAll('.email-form-container, .whatsapp-form-container, .language-form-container').forEach(container => {
+        container.remove();
+    });
+    
+    // Marquer le bouton UMI comme actif
+    document.querySelectorAll('.footer-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    const umiButton = document.querySelector('.footer-btn[onclick="openChatbot()"]');
+    if (umiButton) {
+        umiButton.classList.add('active');
+    }
+    
+    // Toujours afficher les contrôles
+    showInputControls();
+    
+    // Ajouter un message d'accueil seulement s'il n'y a pas de messages récents
+    const recentMessages = chatMessages.querySelectorAll('.clearfix');
+    if (recentMessages.length === 0) {
+        addMessage('Hello! How can I help you today?', 'bot');
+        addQuickReplies(['What services do you offer?', 'Pricing information', 'Contact support']);
+    }
+}
 
     </script>
 </body>
