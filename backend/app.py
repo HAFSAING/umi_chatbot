@@ -357,6 +357,26 @@ def serve_html():
         log_error_safely(e, "serve_html")
         return "Service temporairement indisponible", 503
 
+
+@app.route('/chatbot.css')
+def serve_css():
+    """Servir le fichier CSS"""
+    try:
+        return send_from_directory('../frontend', 'chatbot.css')
+    except Exception as e:
+        log_error_safely(e, "serve_css")
+        return "CSS non trouvé", 404
+
+@app.route('/chatbot.js')
+def serve_js():
+    """Servir le fichier JavaScript"""
+    try:
+        return send_from_directory('../frontend', 'chatbot.js')
+    except Exception as e:
+        log_error_safely(e, "serve_js")
+        return "JS non trouvé", 404
+
+
 @app.route('/api/status', methods=['GET'])
 def status():
     """Endpoint de diagnostic complet - version simplifiée pour l'utilisateur"""
