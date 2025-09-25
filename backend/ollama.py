@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-"""
-Script unifié pour diagnostic et réparation Ollama + LLaVA
-Combine les fonctionnalités de test_ollama.py et fix_ollama_issues.py
-
-Usage:
-    python ollama.py            # Diagnostic complet
-    python ollama.py --fix      # Diagnostic + Réparation automatique si problèmes
-    python ollama.py --force-fix # Force la réparation même si pas de problèmes
-"""
-
 import subprocess
 import time
 import requests

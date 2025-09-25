@@ -1,106 +1,147 @@
-# 🤖 UMI RAG Chatbot
+# 🤖 UMI Intelligent Chatbot
 
-Un chatbot intelligent avec RAG (Retrieval-Augmented Generation) qui peut analyser vos documents PDF et traiter des images.
+Un chatbot intelligent multimodal développé pour l'Université Moulay-Ismail  (UMI) avec capacités RAG (Retrieval-Augmented Generation), analyse d'images et système de mémoire persistante.
 
-## 🚀 Installation Rapide
+## 🌟 Fonctionnalités Principales
+
+- **Chat Multimodal** : Texte + Images + Audio
+- **RAG Intelligent** : Analyse de documents PDF/Word/Excel/PowerPoint
+- **Mémoire Persistante** : Historique des conversations avec base de données SQLite
+- **Système de Sessions** : Gestion des utilisateurs et personnalisation
+- **Réponses Rapides** : Système de réponses pré-configurées pour les questions fréquentes
+- **Interface Moderne** : Design responsive avec thème UMI
+- **Support Multilingue** : Français, Anglais, Arabe
+- **Diagnostics Avancés** : Outils de monitoring et maintenance
+
+## 🚀 Installation et Configuration
 
 ### Prérequis
 - Python 3.8+
-- [Ollama](https://ollama.ai/) installé et démarré
+- [Ollama](https://ollama.ai/) installé
+- 4GB+ RAM recommandé
 
-### 1. Cloner et configurer
+### 1. Cloner et Préparer l'Environnement
 ```bash
+git clone https://github.com/HAFSAING/umi_chatbot.git
 cd backend/
-python setup.py
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou
+venv\Scripts\activate     # Windows
+
+pip install -r requirements.txt
 ```
 
-### 2. Installer les modèles Ollama requis
+### 2. Installer les Modèles Ollama
 ```bash
-ollama pull llama3.2        # Modèle de langage principal
-ollama pull llava:latest    # Pour l'analyse d'images
-ollama pull nomic-embed-text # Pour les embeddings
+# Démarrer Ollama
+ollama serve
+
+# Installer les modèles requis
+ollama pull llama3.2        # Modèle principal (2GB)
+ollama pull llava:latest    # Vision (4GB) 
+ollama pull nomic-embed-text # Embeddings (274MB)
 ```
 
-### 3. Ajouter vos documents PDF
+### 3. Structure des Dossiers
 ```bash
-# Copiez vos fichiers PDF dans le dossier
-cp vos-documents.pdf data/documents/
+mkdir -p data/{documents,vector_db,memory}
 ```
 
-### 4. Démarrer le serveur
+### 4. Tester la Configuration
+```bash
+python ollama.py --fix  # Diagnostic et réparation automatique
+```
+
+### 5. Démarrer le Serveur
 ```bash
 python app.py
 ```
 
-### 5. Ouvrir l'interface
-Ouvrez `frontend/chatbot.html` dans votre navigateur
+### 6. Accéder à l'Interface
+Ouvrez votre navigateur : `http://localhost:5000`
 
-## 📁 Structure du Projet
+## 📁 Architecture du Projet
 
 ```
-mon-projet-umi/
+umi-chatbot/
 │
-├── backend/
-│   ├── app.py              # Serveur Flask principal
-│   ├── setup.py            # Script d'installation
-│   ├── rag/
-│   │   ├── __init__.py
-│   │   ├── loader.py       # Chargeur de PDFs
-│   │   ├── vector_db.py    # Base vectorielle
-│   │   └── retriever.py    # Recherche RAG
+├── backend/                 # Serveur Flask
+│   ├── app.py              # API principale
+│   ├── ollama.py           # Diagnostic Ollama
+│   ├── quick_responses.py  # Réponses rapides UMI
 │   │
-│   └── memory/
-│       ├── __init__.py
-│       ├── manager.py      # Gestion mémoire
-│       └── visualizer.py   # Visualisation
+│   ├── rag/                # Système RAG
+│   │   ├── loader.py       # Multi-format loader
+│   │   ├── vector_db.py    # Base vectorielle Chroma
+│   │   └── retriever.py    # Recherche contextuelle
+│   │
+│   └── memory/             # Système de mémoire
+│       ├── manager.py      # Gestionnaire SQLite
+│       ├── session.py      # Sessions utilisateur
+│       └── visualizer.py   # Analytics
 │
-├── frontend/
-│   └── chatbot.html        # Interface utilisateur
+├── frontend/               # Interface utilisateur
+│   ├── chatbot.html        # Interface principale
+│   ├── chatbot.css         # Styles UMI
+│   └── chatbot.js          # Logique client
 │
-├── data/
-│   ├── documents/          # 📚 AJOUTEZ VOS PDFs ICI
-│   ├── vector_db/          # Base vectorielle (auto-générée)
-│   └── memory/             # Historique conversations
+├── data/                   # Données persistantes
+│   ├── documents/          # 📚 Documents à analyser
+│   ├── vector_db/          # Base vectorielle
+│   └── memory/             # Historique SQLite
 │
-├── requirements.txt
-└── README.md
+└── requirements.txt
 ```
 
-## 🔧 Configuration
+## 🛠️ Configuration Avancée
 
-### Variables d'environnement
-Créez un fichier `.env` (optionnel) :
+### Variables d'Environnement (.env)
 ```env
 OLLAMA_HOST=http://localhost:11434
 EMBEDDING_MODEL=nomic-embed-text
 CHAT_MODEL=llama3.2
 VISION_MODEL=llava:latest
+FLASK_PORT=5000
+DEBUG=True
 ```
 
-### Modèles Ollama supportés
-- **Langage** : llama3.2, llama3, llama2, mistral
-- **Vision** : llava:latest, llava:7b, llava:13b
-- **Embeddings** : nomic-embed-text, all-minilm
+### Personnalisation UMI
+Modifiez `quick_responses.py` pour adapter les réponses aux besoins UMI :
+- Contacts et informations
+- Programmes d'études
+- Procédures d'admission
+- Vie étudiante
 
-## 💡 Utilisation
+## 🔧 Utilisation
 
-### Chat Textuel avec RAG
-1. Ajoutez vos PDFs dans `data/documents/`
-2. Le chatbot analysera automatiquement le contenu
-3. Posez des questions sur vos documents
+### 1. Chat Standard
+- Posez vos questions en langage naturel
+- Le système utilise RAG pour enrichir les réponses avec vos documents
 
-### Analyse d'Images
-1. Cliquez sur l'icône 📷
-2. Sélectionnez une image
-3. Le modèle llava analysera l'image
+### 2. Analyse de Documents
+```bash
+# Copiez vos documents
+cp documents/*.pdf data/documents/
+cp documents/*.docx data/documents/
 
-### Commandes Vocales
-1. Cliquez sur l'icône 🎤
-2. Parlez (nécessite un navigateur compatible)
-3. Votre voix sera transcrite
+# Réinitialisez la base vectorielle
+curl -X POST http://localhost:5000/api/initialize-rag
+```
 
-## 🛠️ API Endpoints
+### 3. Analyse d'Images
+- Cliquez sur l'icône 📷
+- Uploadez une image
+- Le modèle llava analysera le contenu
 
+### 4. Commandes Vocales
+- Cliquez sur l'icône 🎤
+- Parlez (Chrome/Edge recommandés)
+- Transcription automatique
+
+## 🔍 API Reference
+
+### Endpoints Principaux
 ```bash
 # Statut du système
 GET /api/status
@@ -109,102 +150,186 @@ GET /api/status
 POST /api/chat
 {
     "message": "Votre question",
-    "image": "base64_image_data"  // optionnel
+    "files": [{"data": "base64...", "type": "image/jpeg"}],
+    "session_id": "optional-session-id"
 }
 
-# Réinitialiser RAG
+# Gestion des sessions
+GET /api/session/{session_id}/info
+GET /api/session/{session_id}/greeting
+
+# Mémoire et statistiques
+GET /api/memory/status
+POST /api/memory/clear
+
+# Réinitialisation RAG
 POST /api/initialize-rag
 ```
 
-## 🔍 Résolution de Problèmes
+## 🛠️ Maintenance et Diagnostics
 
-### ❌ "Ollama non connecté"
+### Script de Diagnostic
 ```bash
-# Vérifier qu'Ollama fonctionne
+# Diagnostic complet
+python ollama.py
+
+# Réparation automatique
+python ollama.py --fix
+
+# Réparation forcée
+python ollama.py --force-fix
+```
+
+### Monitoring de la Mémoire
+```python
+from memory.visualizer import MemoryVisualizer
+viz = MemoryVisualizer()
+viz.show_statistics()
+viz.show_conversations(limit=20)
+```
+
+### Nettoyage Périodique
+```python
+from memory.manager import MemoryManager
+memory = MemoryManager()
+memory.clear_old_conversations(days_to_keep=30)
+```
+
+## 🔧 Résolution de Problèmes
+
+### Problèmes Courants
+
+**❌ "Failed to fetch"**
+```bash
+# Vérifier le serveur
+curl http://localhost:5000/api/test
+
+# Redémarrer Flask
+python app.py
+```
+
+**❌ "Ollama non disponible"**
+```bash
+# Vérifier Ollama
 ollama list
-
-# Redémarrer Ollama
 ollama serve
+
+# Tester un modèle
+ollama run llama3.2 "hello"
 ```
 
-### ❌ "Modèle llava non disponible"
+**❌ "Modèle llava introuvable"**
 ```bash
-# Installer le modèle
+# Réinstaller llava
 ollama pull llava:latest
+
+# Vérifier l'installation
+ollama list | grep llava
 ```
 
-### ❌ "Aucun contexte RAG trouvé"
+**❌ "RAG non initialisé"**
 ```bash
-# Vérifier les PDFs
-ls data/documents/*.pdf
+# Vérifier les documents
+ls -la data/documents/
 
-# Réinitialiser la base vectorielle
+# Réinitialiser la base
 curl -X POST http://localhost:5000/api/initialize-rag
 ```
 
-### ❌ "Failed to fetch"
-- Vérifiez que le serveur Flask fonctionne sur le port 5000
-- Vérifiez les CORS si vous utilisez un autre domaine
+### Logs de Debug
+- Backend : Logs dans le terminal Flask
+- Frontend : Console du navigateur (F12)
+- Mémoire : `data/memory/chatbot_memory.db`
 
-## 🎯 Fonctionnalités
+## 📊 Performance et Limitations
 
-- ✅ **RAG intelligent** : Analyse de documents PDF
-- ✅ **Vision** : Analyse d'images avec llava
-- ✅ **Mémoire** : Historique des conversations
-- ✅ **Interface moderne** : Chat responsive
-- ✅ **Voice input** : Reconnaissance vocale
-- ✅ **Multi-modal** : Texte + Images
-- ✅ **Réponses rapides** : Quick replies contextuelles
+### Configuration Recommandée
+- **RAM** : 8GB+ (modèles llava consomment 4-6GB)
+- **CPU** : 4+ cœurs
+- **Stockage** : 10GB+ pour les modèles Ollama
 
-## 🚀 Développement
+### Limitations
+- **Taille des fichiers** : Max 10MB par upload
+- **Types supportés** : PDF, DOCX, TXT, CSV, PPTX, XLSX
+- **Sessions** : Timeout 2h par défaut
+- **Modèles** : Dépendant d'Ollama local
 
-### Ajouter de nouveaux formats
-Modifiez `rag/loader.py` pour supporter d'autres formats :
-```python
-# Exemple pour Word, Excel, etc.
-from langchain_community.document_loaders import Docx2txtLoader
+## 🛡️ Sécurité et Confidentialité
+
+- **Données locales** : Tout reste sur votre serveur
+- **Pas de cloud** : Aucune donnée envoyée vers l'extérieur
+- **Sessions** : IDs uniques, pas de données personnelles
+- **Fichiers** : Stockés localement, suppression automatique
+
+## 🎯 Roadmap et Améliorations
+
+### Version Actuelle (1.0)
+- ✅ Chat multimodal complet
+- ✅ RAG avec multiple formats
+- ✅ Mémoire persistante
+- ✅ Interface UMI responsive
+
+### Améliorations Futures
+- 🔄 Intégration API externes
+- 🔄 Support de plus de langues
+- 🔄 Analytics avancées
+- 🔄 Mode multi-utilisateurs
+- 🔄 Export/import de conversations
+
+## 📚 Documentation Technique
+
+### Formats de Documents Supportés
+| Format | Extension | Loader | Notes |
+|--------|-----------|---------|-------|
+| PDF | .pdf | PDFPlumberLoader | Extraction texte + images |
+| Word | .docx, .doc | Docx2txtLoader | Texte formaté |
+| Excel | .xlsx, .xls | UnstructuredExcelLoader | Tableaux et données |
+| PowerPoint | .pptx, .ppt | UnstructuredPowerPointLoader | Contenu des slides |
+| Texte | .txt, .md | TextLoader | UTF-8 et Latin-1 |
+| CSV | .csv | CSVLoader | Données tabulaires |
+
+### Base de Données SQLite
+```sql
+-- Structure des tables principales
+CREATE TABLE conversations (
+    id INTEGER PRIMARY KEY,
+    timestamp TEXT,
+    user_message TEXT,
+    bot_response TEXT,
+    session_id TEXT,
+    metadata TEXT
+);
+
+CREATE TABLE facts (
+    id INTEGER PRIMARY KEY,
+    key TEXT UNIQUE,
+    value TEXT,
+    category TEXT,
+    confidence REAL
+);
+
+CREATE TABLE user_preferences (
+    id INTEGER PRIMARY KEY,
+    user_id TEXT,
+    preference_key TEXT,
+    preference_value TEXT
+);
 ```
 
-### Personnaliser le modèle
-Changez le modèle dans `app.py` :
-```python
-model_name = "mistral"  # ou votre modèle préféré
-```
+## 🤝 Contribution
 
-### Debug mode
-```bash
-# Démarrer en mode debug
-python app.py --debug
-```
+### Structure du Code
+- **Backend** : Flask + SQLite + Ollama
+- **Frontend** : HTML5 + CSS3 + JavaScript Vanilla
+- **RAG** : LangChain + ChromaDB + Ollama Embeddings
+- **Style** : CSS personnalisé aux couleurs UMI
 
-## 📊 Monitoring
+### Standards de Code
+- Python : PEP8, type hints
+- JavaScript : ES6+, commentaires français
+- CSS : BEM methodology, responsive design
 
-### Visualiser l'historique
-```python
-from backend.memory.visualizer import MemoryVisualizer
-viz = MemoryVisualizer()
-viz.show_conversations(limit=10)
-```
-
-### Vérifier la base vectorielle
-```python
-from backend.rag.vector_db import VectorDB
-db = VectorDB()
-# Compter les documents indexés
-print(f"Documents: {db.vectorstore._collection.count()}")
-```
-
-
-## 📝 Licence
-
-MIT License - voir le fichier LICENSE
-
-## 🆘 Support
-
-- 📧 Email: support@umi.com
-- 📱 Issues GitHub
-- 💬 Discord Community
 
 ---
 
-**Fait avec ❤️ pour UMI**
+*Chatbot intelligent développé avec les dernières technologies open-source pour UMI* 🎓

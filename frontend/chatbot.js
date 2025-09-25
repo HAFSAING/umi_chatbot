@@ -1432,7 +1432,6 @@ function openChatbot() {
     // Toujours afficher les contrôles
     showInputControls();
 
-    // Optionnel: ajouter un message d'accueil seulement s'il n'y a pas de messages récents
     const visibleMessages = Array.from(chatMessages.querySelectorAll('.clearfix')).filter(msg => 
         msg.style.display !== 'none' && 
         !msg.classList.contains('email-form-container') && 

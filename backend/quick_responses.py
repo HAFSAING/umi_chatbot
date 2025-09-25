@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Système de réponses rapides pour le chatbot UMI
-À ajouter dans votre backend/
-"""
-
 import json
 import re
 from typing import Dict, List, Optional, Tuple
@@ -34,14 +28,13 @@ class QuickResponseSystem:
 • presidence@umi.ac.ma
 
 **Adresse:**
-Université Mohammed VI Polytechnique - UMI
-Campus principal, Benguerir, Maroc
+Université moulay ismail - UMI
+Campus principal, Meknes, Maroc
 
 Pour une assistance spécifique, précisez votre demande et nous vous orienterons vers le bon service.""",
                 "quick_replies": ["Admissions", "Services académiques", "Support technique", "Autre demande"]
             },
             
-            # ADMISSIONS
             "admissions": {
                 "patterns": [
                     "admission", "candidature", "inscription", "dossier",
@@ -90,7 +83,6 @@ Quel domaine d'études vous intéresse le plus?""",
                 "quick_replies": ["Ingénierie", "Business", "Sciences", "Technologies", "Autre"]
             },
             
-            # FRAIS ET FINANCEMENT
             "frais": {
                 "patterns": [
                     "frais", "coût", "prix", "tarif", "finance", "bourse",
@@ -116,7 +108,6 @@ Souhaitez-vous des informations sur un programme particulier?""",
                 "quick_replies": ["Bourses disponibles", "Plans de paiement", "Frais par programme", "Aide financière"]
             },
             
-            # CAMPUS ET VIE ÉTUDIANTE
             "campus": {
                 "patterns": [
                     "campus", "résidence", "logement", "vie étudiante",
@@ -169,7 +160,7 @@ Quel type d'accompagnement recherchez-vous?""",
                 "quick_replies": ["Stages", "Emploi", "Entreprises partenaires", "CV et coaching"]
             },
             
-            # INTERNATIONAL
+           
             "international": {
                 "patterns": [
                     "international", "étranger", "visa", "échange",
@@ -304,7 +295,7 @@ def integrate_quick_responses(user_message: str) -> Optional[Dict]:
     qrs = QuickResponseSystem()
     return qrs.get_quick_response(user_message)
 
-# Exemples d'utilisation
+
 def test_quick_responses():
     """Tests du système de réponses rapides"""
     qrs = QuickResponseSystem()

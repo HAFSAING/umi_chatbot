@@ -117,7 +117,6 @@ def get_best_llava_model():
         data = response.json()
         model_names = [model.get('name', '') for model in data.get('models', [])]
         
-        # Priorités des modèles llava (du meilleur au moins bon)
         preferred_models = [
             'llava:latest',
             'llava:13b',
@@ -285,7 +284,7 @@ def process_user_message(message, session_id):
             else:
                 logger.info(f"👤 Nom déjà connu: {user_name}")
         
-        # Mettre à jour l'activité de la session
+        
         session_manager.update_session_activity(session_id)
         
         return message, name_detected
@@ -389,7 +388,6 @@ def status():
             'message': 'Service opérationnel' if ollama_ok else 'Service en maintenance'
         }
         
-        # Log détaillé pour le développeur (terminal uniquement)
         if ollama_ok:
             logger.info(f"✅ Status OK - Modèles: {llava_models}")
         else:
@@ -732,12 +730,10 @@ def get_personalized_greeting(session_id):
         log_error_safely(e, "get_personalized_greeting")
         return jsonify({'greeting': 'Bonjour ! Comment puis-je vous aider ?'})
 
-# Endpoints de debug (optionnels, pour développement uniquement)
 @app.route('/api/debug/ollama', methods=['GET'])
 def debug_ollama():
     """Endpoint de debug pour Ollama - DÉVELOPPEMENT UNIQUEMENT"""
-    # Cet endpoint ne devrait être utilisé qu'en développement
-    # En production, désactivez-le ou protégez-le
+
     if not app.debug:
         return jsonify({'error': 'Debug non disponible'}), 403
     
@@ -820,13 +816,13 @@ def test_quick_responses_endpoint():
 if __name__ == '__main__':
     logger.info("🔧 Tests de démarrage...")
     
-    # Test Ollama au démarrage
+
     ollama_ok, llava_models = test_ollama_connection()
     
     if ollama_ok and llava_models:
         logger.info(f"✅ Ollama opérationnel avec {len(llava_models)} modèles llava!")
         
-        # Test rapide du premier modèle
+
         if test_model_response(llava_models[0]):
             logger.info("✅ Modèle testé et fonctionnel!")
         else:
@@ -839,7 +835,7 @@ if __name__ == '__main__':
         logger.info("   3. Redémarrez Ollama si nécessaire")
         logger.info("   4. Testez manuellement: ollama run llava:latest 'hello'")
     
-    # Tentative d'initialisation RAG
+
     rag_ok = initialize_rag_system()
     if rag_ok:
         logger.info("✅ Système RAG opérationnel!")

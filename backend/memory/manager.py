@@ -270,23 +270,23 @@ class MemoryManager:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 
-                # Compter les conversations
+                
                 cursor.execute('SELECT COUNT(*) FROM conversations')
                 total_conversations = cursor.fetchone()[0]
                 
-                # Compter les faits
+             
                 cursor.execute('SELECT COUNT(*) FROM facts')
                 total_facts = cursor.fetchone()[0]
                 
-                # Compter les préférences
+        
                 cursor.execute('SELECT COUNT(*) FROM user_preferences')
                 total_preferences = cursor.fetchone()[0]
                 
-                # Conversation la plus récente
+          
                 cursor.execute('SELECT MAX(created_at) FROM conversations')
                 last_conversation = cursor.fetchone()[0]
                 
-                # Taille du fichier de base de données
+          
                 db_size = self.db_path.stat().st_size if self.db_path.exists() else 0
                 
                 return {
@@ -348,7 +348,7 @@ class MemoryManager:
     def __del__(self):
         """Nettoyage lors de la destruction de l'objet"""
         try:
-            # Fermer proprement les connexions si nécessaire
+            
             pass
         except:
             pass

@@ -2,7 +2,6 @@ try:
     from langchain_chroma import Chroma
     from langchain_ollama import OllamaEmbeddings
 except ImportError:
-    # Fallback aux anciens packages si les nouveaux ne sont pas installés
     try:
         from langchain_community.vectorstores import Chroma
         from langchain_community.embeddings import OllamaEmbeddings
@@ -150,7 +149,7 @@ class VectorDB:
     def get_stats(self):
         """Retourne des statistiques sur la base vectorielle"""
         try:
-            # Essayer de compter les documents (méthode approximative)
+            
             test_search = self.vectorstore.similarity_search("", k=1000)
             doc_count = len(test_search)
             

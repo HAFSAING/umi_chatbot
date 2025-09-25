@@ -163,7 +163,6 @@ class DocumentLoader:
                     documents = loader_func(file_path)
                     
                     if documents:
-                        # Ajouter des métadonnées aux documents
                         for doc in documents:
                             doc.metadata.update({
                                 'source_file': file_path.name,
@@ -194,7 +193,6 @@ class DocumentLoader:
         
         return all_documents, loaded_files, failed_files
 
-# Garde la classe PDFLoader pour la compatibilité
 class PDFLoader(DocumentLoader):
     """Classe de compatibilité - utilise maintenant DocumentLoader"""
     

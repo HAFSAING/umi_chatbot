@@ -1,18 +1,53 @@
-flask>=2.0.0
+# Core Flask Framework
+flask>=3.0.0
 flask-cors>=4.0.0
+gunicorn>=21.0.0
+
+# Ollama Integration
 ollama>=0.3.0
-langchain>=0.1.0
-langchain-community>=0.0.1
-langchain-ollama>=0.2.0
+
+# LangChain RAG Framework
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-ollama>=0.1.0
 langchain-chroma>=0.1.4
+langchain-text-splitters>=0.2.0
+
+# Document Processing
 pdfplumber>=0.10.0
+python-docx>=1.1.0
+openpyxl>=3.1.0
+python-pptx>=0.6.23
+unstructured>=0.12.0
+docx2txt>=0.8
+
+# Vector Database and Embeddings
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# Data Processing and Utilities
+pandas>=2.0.0
+numpy>=1.24.0
+sqlite3
+
+# Environment and Configuration
 python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# HTTP Requests and Utilities
+requests>=2.31.0
+httpx>=0.25.0
+urllib3>=2.0.0
+
+# Date and Time Processing
+python-dateutil>=2.8.0
+
+# Logging and Monitoring
+psutil>=5.9.0
 tabulate>=0.9.0
-requests
-pathlib
-datetime
-uuid
-json
-re
-threading
-hashlib
+
+# Text Processing
+regex>=2023.0.0
+tiktoken>=0.5.0
+
